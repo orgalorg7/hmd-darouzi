@@ -31,5 +31,6 @@ export function securityText(origin,now=new Date()){
  const expires=new Date(now.getTime()+360*864e5);expires.setUTCHours(0,0,0,0);
  return `Contact: mailto:h.darouzi@gmail.com\nExpires: ${expires.toISOString().replace('.000Z','Z')}\nPreferred-Languages: ar, en\n${origin?`Canonical: ${origin}/.well-known/security.txt\n`:''}`;
 }
-// AI-training crawlers and offline site copiers that honor robots.txt. Search engines and link previews stay allowed.
-export const blockedCrawlers=['GPTBot','CCBot','ClaudeBot','anthropic-ai','Google-Extended','Applebot-Extended','Bytespider','meta-externalagent','cohere-ai','cohere-training-data-crawler','Diffbot','Omgilibot','ImagesiftBot','img2dataset','HTTrack','Wget','WebCopier','WebZIP','Teleport','TeleportPro','Offline Explorer','SiteSnagger','WebStripper','WebReaper'];
+// Bulk scrapers and offline site copiers that honor robots.txt. Search engines, link previews and AI assistants
+// (ChatGPT, Claude, Gemini and others) stay allowed so the company can be found and described accurately there.
+export const blockedCrawlers=['Bytespider','Diffbot','Omgilibot','ImagesiftBot','img2dataset','HTTrack','Wget','WebCopier','WebZIP','Teleport','TeleportPro','Offline Explorer','SiteSnagger','WebStripper','WebReaper'];

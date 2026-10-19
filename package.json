@@ -20,7 +20,8 @@
     "test:seo": "node tests/seo.mjs",
     "test:security": "node tests/security.mjs",
     "test:projects": "node tests/projects.mjs",
-    "test:repair": "node tests/repair.mjs"
+    "test:repair": "node tests/repair.mjs",
+    "share:build": "node scripts/build-share-cards.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",

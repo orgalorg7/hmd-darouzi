@@ -8,6 +8,7 @@ export const faqMeta={
 };
 export const faqItems={
  ar:[
+  ['من هي شركة درعوزي للتبريد؟','درعوزي للتبريد (HMD Darouzi) شركة تبريد صناعي في حلب، سوريا. نصنّع ونجهّز غرف التبريد والتجميد، شيلرات تبريد المياه، أبراج التبريد، معامل ألواح الثلج، صناديق السيارات المبردة والعزل الحراري بألواح الساندويش بانل، ونبيع قطع التبريد بالمفرق. مكتب المبيعات في الجميلية والمنشأة الصناعية في المدينة الصناعية بالشيخ نجار.'],
   ['كم تكلفة غرفة التبريد؟','تعتمد التكلفة على أبعاد الغرفة ودرجة الحرارة المطلوبة وسماكة الألواح ونوع وحدة التبريد. أرسل لنا الأبعاد ونوع المنتج الذي تريد تخزينه، ونجهّز لك عرض سعر مخصصاً.'],
   ['ما درجات الحرارة التي تصل إليها غرف التبريد؟','نجهّز غرف تبريد وتجميد من +15 حتى −40 درجة مئوية، حسب المنتج وطريقة التخزين.'],
   ['ما سماكات ألواح الساندويش بانل لديكم؟','6 و10 و15 سم. يتكوّن اللوح من طبقتين من الصاج أو الألمنيوم بينهما طبقة عازلة من البولي يوريثان (الفوم) أو البولي إيثيلين أو البوليسترين، والوجه الداخلي مدهون بطبقة إيبوكسي بسماكة 5 ميكرون.'],
@@ -20,6 +21,7 @@ export const faqItems={
   ['أين تقع الشركة؟','مكتب المبيعات في حلب، الجميلية، بناء مديرية الأوقاف، والمنشأة الصناعية في المدينة الصناعية بالشيخ نجار. الهاتف: 0944699555، والهاتف الأرضي: 021 2250266 و021 2254755.']
  ],
  en:[
+  ['Who is HMD Darouzi?','HMD Darouzi (درعوزي للتبريد) is an industrial refrigeration company in Aleppo, Syria. We manufacture and supply cold and freezer rooms, water chillers, cooling towers, block ice plants, refrigerated vehicle bodies and sandwich-panel thermal insulation, and sell refrigeration parts at retail. Our sales office is in Al-Jamiliyah and our industrial facility is in Sheikh Najjar Industrial City.'],
   ['How much does a cold room cost?','It depends on the room’s dimensions, the required temperature, the panel thickness and the refrigeration unit. Send us the dimensions and the product you want to store, and we will prepare a tailored quotation.'],
   ['What temperatures can your cold rooms reach?','We equip cold and freezer rooms from +15°C down to −40°C, depending on the product and how it is stored.'],
   ['What sandwich panel thicknesses do you offer?','6, 10 and 15 cm. Each panel has two skins of metal sheet or aluminium around an insulating core of polyurethane foam, polyethylene or polystyrene, and the inner face carries a 5-micron epoxy coat.'],

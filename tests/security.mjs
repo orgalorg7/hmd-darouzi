@@ -12,7 +12,7 @@ const production=headersFile('https://www.example.com','');expect(production).to
 const robots=await readFile('dist/robots.txt','utf8'),open=robots.indexOf('User-agent: *');
 for(const agent of blockedCrawlers)expect(robots.indexOf(`User-agent: ${agent}\n`)).toBeGreaterThan(-1);
 expect(robots.slice(0,open)).toContain('Disallow: /');expect(robots.slice(open)).toContain('Allow: /');expect(robots.slice(open)).not.toContain('Disallow');
-for(const agent of ['Googlebot','Bingbot','facebookexternalhit','WhatsApp'])expect(robots).not.toContain(agent);
+for(const agent of ['Googlebot','Bingbot','facebookexternalhit','WhatsApp','GPTBot','OAI-SearchBot','ChatGPT-User','ClaudeBot','Claude-SearchBot','Claude-User','anthropic-ai','Google-Extended','PerplexityBot','CCBot'])expect(robots).not.toContain(agent);
 const text=await readFile('dist/.well-known/security.txt','utf8'),expires=new Date(text.match(/^Expires: (.+)$/m)[1]);
 expect(text).toMatch(/^Contact: mailto:h\.darouzi@gmail\.com$/m);expect(expires.getTime()).toBeGreaterThan(Date.now());expect(expires.getTime()-Date.now()).toBeLessThan(366*864e5);
 

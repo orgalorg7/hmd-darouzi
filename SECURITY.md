@@ -14,14 +14,14 @@ The site is static: no server code, database, login, uploads or form endpoint. V
 - **HTTPS only (production):** builds with `SITE_URL` send `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`. Preview builds do not.
 - **PDF:** the company profile keeps every header except the page policy, so built-in PDF viewers render it.
 - **Vulnerability reports:** `/.well-known/security.txt` (RFC 9116) points researchers to `h.darouzi@gmail.com`. It expires 360 days after each build, so **rebuild and redeploy at least once a year**.
-- **Crawlers:** `robots.txt` refuses known AI-training crawlers and offline site copiers (HTTrack, Wget, WebCopier and others). Google, Bing and link previews stay allowed.
+- **Crawlers:** `robots.txt` refuses bulk scrapers and offline site copiers (HTTrack, Wget, WebCopier and others). Google, Bing, link previews and AI assistants (ChatGPT, Claude, Gemini, Perplexity) stay allowed so the company can be found there.
 
 `npm run test:security` (preview server running) checks the policy text, the headers on every page type, zero policy violations while the 3D engine, inspection, quote, tray, footer canvas and language switch run, refused framing and hotlinking, the PDF exception, `security.txt` and `robots.txt`. Adding any third-party service (analytics, maps, chat, fonts) needs a deliberate change to `security.js`; otherwise this test fails.
 
 ## Cloudflare settings at launch
 
 1. **SSL/TLS:** Always Use HTTPS on; minimum TLS 1.2; TLS 1.3 on.
-2. **Security → Bots:** turn on Bot Fight Mode and **Block AI bots**. This is enforced at the edge, unlike robots.txt.
+2. **Security → Bots:** turn on Bot Fight Mode, but leave **Block AI bots** off. Blocking them would stop ChatGPT, Claude and other assistants from reading and recommending the site.
 3. **Security → WAF:** keep the managed rules on. Add a rate-limiting rule, for example more than 100 requests in 10 seconds from one IP → block.
 4. **Scrape Shield:** turn on Hotlink Protection. **Leave Email Address Obfuscation off**: it injects a script, which the guides' policy forbids, and breaks their email links.
 5. **Leave Rocket Loader, Zaraz and automatic Web Analytics injection off.** They insert inline scripts that the policy blocks.

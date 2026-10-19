@@ -1,6 +1,6 @@
 import {parseHTML} from 'linkedom';
 import {english,services,products} from '../../src/content.js';
-import {faqPath,homeMeta,homePath,privacyPath,servicePath,socialLinks,whatsappLink} from '../../src/site-meta.js';
+import {faqPath,homeMeta,homePath,privacyPath,servicePath,shareImage,socialLinks,whatsappLink} from '../../src/site-meta.js';
 import {faqItems,faqMeta} from './faq.js';
 import {privacyCopy,privacyMeta,privacyUpdated} from './privacy.js';
 import {installationContent} from '../../src/installation.js';
@@ -15,41 +15,50 @@ export function siteOrigin(value=''){
  if(url.protocol!=='https:'||url.username||url.password||url.search||url.hash||url.pathname!=='/'||!url.hostname.includes('.')||/localhost|\.test$|\.example$|\.invalid$|\.trycloudflare\.com$|\.pages\.dev$/.test(url.hostname))throw new Error('SITE_URL must be the permanent HTTPS domain origin, without a path, query or preview hostname.');
  return url.origin;
 }
+// Absolute origin for link-preview images on a preview build (for example the current tunnel). Never makes pages indexable.
+export function previewOrigin(value=''){
+ if(!value)return '';
+ const url=new URL(value);
+ if(url.protocol!=='https:'||url.pathname!=='/'||url.search||url.hash)throw new Error('PREVIEW_URL must be an HTTPS origin without a path or query.');
+ return url.origin;
+}
 export const routes=[...['ar','en'].flatMap(lang=>[{lang,path:homePath(lang)},...services.map(service=>({lang,path:servicePath(service.id,lang),service})),{lang,path:faqPath(lang),faq:true},{lang,path:privacyPath(lang),privacy:true}])];
 // One description of each page type for metadata, structured data and language alternates.
 function page({lang,service,privacy,faq}){
- if(faq)return {meta:faqMeta[lang],path:faqPath(lang),alternate:faqPath,crumb:faqMeta[lang].name,image:'cold-room'};
- if(privacy)return {meta:privacyMeta[lang],path:privacyPath(lang),alternate:privacyPath,crumb:privacyMeta[lang].name,image:'cold-room'};
- if(service)return {meta:serviceMeta(service,lang),path:servicePath(service.id,lang),alternate:l=>servicePath(service.id,l),crumb:service[lang],image:service.image};
- return {meta:homeMeta[lang],path:homePath(lang),alternate:homePath,image:'cold-room'};
+ const brand=lang==='ar'?'درعوزي للتبريد':'HMD Darouzi',info=meta=>({title:`${meta.name} ❄️ ${brand}`,description:meta.description,image:shareImage('home',lang),alt:brand});
+ if(faq)return {meta:faqMeta[lang],path:faqPath(lang),alternate:faqPath,crumb:faqMeta[lang].name,share:info(faqMeta[lang])};
+ if(privacy)return {meta:privacyMeta[lang],path:privacyPath(lang),alternate:privacyPath,crumb:privacyMeta[lang].name,share:info(privacyMeta[lang])};
+ if(service)return {meta:serviceMeta(service,lang),path:servicePath(service.id,lang),alternate:l=>servicePath(service.id,l),crumb:service[lang],share:{title:`${service[lang]} ❄️ ${brand}`,description:lang==='ar'?service.descAr:service.descEn,image:shareImage(service.id,lang),alt:`${service[lang]} · ${brand}`}};
+ return {meta:homeMeta[lang],path:homePath(lang),alternate:homePath,share:{title:homeMeta[lang].shareTitle,description:homeMeta[lang].shareDescription,image:shareImage('home',lang),alt:brand}};
 }
 export function schema({lang,origin='',service,privacy,faq}){
  const {path,meta,crumb}=page({lang,service,privacy,faq}),url=origin+path;
- const business={'@type':'LocalBusiness','@id':origin+'/#business',name:'HMD Darouzi',alternateName:['درعوزي','درعوزي للتبريد الصناعي','HMD DAROUZI'],url:origin+'/',logo:origin+'/assets/logo.webp',image:origin+'/assets/plant.webp',telephone:'+963944699555',email:'h.darouzi@gmail.com',address:{'@type':'PostalAddress',streetAddress:'Al-Jamiliyah, Awqaf Directorate building',addressLocality:'Aleppo',addressCountry:'SY'},location:{'@type':'Place',name:'HMD Darouzi industrial facility',address:{'@type':'PostalAddress',streetAddress:'Sheikh Najjar Industrial City',addressLocality:'Aleppo',addressCountry:'SY'}},contactPoint:{'@type':'ContactPoint',telephone:'+963944699555',email:'h.darouzi@gmail.com',contactType:'sales',availableLanguage:['Arabic','English']},sameAs:Object.values(socialLinks)};
- const graph=[business,{'@type':'WebSite','@id':origin+'/#website',url:origin+'/',name:'HMD Darouzi',alternateName:'درعوزي',inLanguage:['ar','en'],publisher:{'@id':business['@id']}},{'@type':'WebPage','@id':url+'#webpage',url,name:meta.title,description:meta.description,inLanguage:lang,isPartOf:{'@id':origin+'/#website'},about:{'@id':service?url+'#service':business['@id']}}];
+ const business={'@type':'LocalBusiness','@id':origin+'/#business',name:'HMD Darouzi',alternateName:['درعوزي','درعوزي للتبريد','درعوزي للتبريد الصناعي','HMD درعوزي','شركة درعوزي','HMD DAROUZI','Darouzi','Darouzi Refrigeration'],url:origin+'/',logo:origin+'/assets/logo.webp',image:origin+'/assets/plant.webp',telephone:'+963944699555',email:'h.darouzi@gmail.com',address:{'@type':'PostalAddress',streetAddress:'Al-Jamiliyah, Awqaf Directorate building',addressLocality:'Aleppo',addressCountry:'SY'},location:{'@type':'Place',name:'HMD Darouzi industrial facility',address:{'@type':'PostalAddress',streetAddress:'Sheikh Najjar Industrial City',addressLocality:'Aleppo',addressCountry:'SY'}},contactPoint:{'@type':'ContactPoint',telephone:'+963944699555',email:'h.darouzi@gmail.com',contactType:'sales',availableLanguage:['Arabic','English']},sameAs:Object.values(socialLinks)};
+ const graph=[business,{'@type':'WebSite','@id':origin+'/#website',url:origin+'/',name:'HMD Darouzi',alternateName:['درعوزي','درعوزي للتبريد','HMD درعوزي'],inLanguage:['ar','en'],publisher:{'@id':business['@id']}},{'@type':'WebPage','@id':url+'#webpage',url,name:meta.title,description:meta.description,inLanguage:lang,isPartOf:{'@id':origin+'/#website'},about:{'@id':service?url+'#service':business['@id']}}];
  if(service)graph.push({'@type':'Service','@id':url+'#service',name:service[lang],description:lang==='ar'?service.descAr:service.descEn,url,provider:{'@id':business['@id']},image:origin+`/assets/${service.image}.webp`});
  if(faq)graph.push({'@type':'FAQPage','@id':url+'#faq',url,inLanguage:lang,mainEntity:faqItems[lang].map(([question,answer])=>({'@type':'Question',name:question,acceptedAnswer:{'@type':'Answer',text:answer}}))});
  if(crumb)graph.push({'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:lang==='ar'?'الرئيسية':'Home',item:origin+homePath(lang)},{'@type':'ListItem',position:2,name:crumb,item:url}]});
  return {'@context':'https://schema.org','@graph':graph};
 }
 export function serviceMeta(service,lang){return {title:lang==='ar'?`${service.ar} في حلب | درعوزي HMD Darouzi`:`${service.en} in Aleppo | HMD Darouzi`,description:lang==='ar'?`درعوزي في حلب، سوريا. ${service.descAr}`:`HMD Darouzi, Aleppo, Syria. ${service.descEn}`};}
-export function metadata({lang,origin='',service,privacy,faq,verification=''}){
- const {meta,path,alternate,image}=page({lang,service,privacy,faq});
+// `share` is the absolute origin for link previews: the permanent domain, or PREVIEW_URL on a noindex preview build.
+export function metadata({lang,origin='',service,privacy,faq,verification='',share=origin}){
+ const {meta,path,alternate,share:card}=page({lang,service,privacy,faq});
  return `<title>${escape(meta.title)}</title>
 <meta name="description" content="${escape(meta.description)}">
 <meta name="robots" content="${origin?'index, follow, max-image-preview:large':'noindex, follow'}">
 <meta name="site-origin" content="${escape(origin)}">
 ${origin?`<link rel="canonical" href="${origin+path}">${['ar','en','x-default'].map(l=>`<link rel="alternate" hreflang="${l}" href="${origin+alternate(l==='x-default'?'ar':l)}">`).join('')}`:''}
 <meta property="og:type" content="website"><meta property="og:site_name" content="HMD Darouzi | درعوزي">
-<meta property="og:title" content="${escape(meta.title)}"><meta property="og:description" content="${escape(meta.description)}">
+<meta property="og:title" content="${escape(card.title)}"><meta property="og:description" content="${escape(card.description)}">
 <meta property="og:locale" content="${lang==='ar'?'ar_SY':'en_US'}"><meta property="og:locale:alternate" content="${lang==='ar'?'en_US':'ar_SY'}">
-${origin?`<meta property="og:url" content="${origin+path}">`:''}
-<meta property="og:image" content="${origin}/assets/${image}.webp"><meta property="og:image:alt" content="${escape(service?service[lang]:(lang==='ar'?'غرفة تبريد من ملف شركة درعوزي':'Cold room from the HMD Darouzi company profile'))}">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(meta.title)}"><meta name="twitter:description" content="${escape(meta.description)}"><meta name="twitter:image" content="${origin}/assets/${image}.webp">
+${share?`<meta property="og:url" content="${share+path}">`:''}
+<meta property="og:image" content="${share+card.image}">${share?`<meta property="og:image:secure_url" content="${share+card.image}">`:''}<meta property="og:image:type" content="image/jpeg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="${escape(card.alt)}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${escape(card.title)}"><meta name="twitter:description" content="${escape(card.description)}"><meta name="twitter:image" content="${share+card.image}"><meta name="twitter:image:alt" content="${escape(card.alt)}">
 ${verification?`<meta name="google-site-verification" content="${escape(verification)}">`:''}
 <script id="site-schema" type="application/ld+json">${json(schema({lang,origin,service,privacy,faq}))}</script>`;
 }
-export function renderHome(template,{lang='ar',origin='',verification=''}={}){
+export function renderHome(template,{lang='ar',origin='',verification='',share=origin}={}){
  const {document:d}=parseHTML(template),$=s=>d.querySelector(s),all=s=>[...d.querySelectorAll(s)];
  const arabic=JSON.parse($('#arabic-copy')?.textContent||'{}');
  for(const el of all('[data-i]'))arabic[el.dataset.i]??=el.innerHTML;
@@ -61,7 +70,7 @@ export function renderHome(template,{lang='ar',origin='',verification=''}={}){
  for(const el of all('[data-p]'))if(words[el.dataset.p]!=null)el.setAttribute('placeholder',words[el.dataset.p]);
  d.documentElement.lang=lang;d.documentElement.dir=lang==='ar'?'rtl':'ltr';
  for(const el of all('title,meta[name=description],meta[name=robots],meta[name=site-origin],meta[name=google-site-verification],meta[property^="og:"],meta[name^="twitter:"],link[rel=canonical],link[hreflang],script[type="application/ld+json"],#arabic-copy'))el.remove();
- d.head.insertAdjacentHTML('beforeend',metadata({lang,origin,verification})+`<script id="arabic-copy" type="application/json">${json(arabic)}</script>`);
+ d.head.insertAdjacentHTML('beforeend',metadata({lang,origin,verification,share})+`<script id="arabic-copy" type="application/json">${json(arabic)}</script>`);
  $('#language').setAttribute('href',homePath(lang==='ar'?'en':'ar'));$('#language').setAttribute('hreflang',lang==='ar'?'en':'ar');$('#language').setAttribute('aria-label',lang==='ar'?'EN - Switch to English':'العربية - التبديل إلى العربية');$('#language').innerHTML=(lang==='ar'?'EN':'العربية')+' '+icon('language');
  $('#whatsapp-fab').setAttribute('href',whatsappLink(lang));$('.footer-privacy').setAttribute('href',privacyPath(lang));$('.footer-faq').setAttribute('href',faqPath(lang));$('#contact-whatsapp').setAttribute('href',whatsappLink(lang));
  $('#solution-tabs').innerHTML=services.map((s,i)=>`<button class="solution-tab" role="tab" id="tab-${s.id}" aria-controls="solution-panel" aria-selected="${i===0}" tabindex="${i===0?0:-1}" data-service="${s.id}"><span class="service-thumb"><img src="/assets/${s.image}.webp" alt="" width="400" height="300" loading="lazy"></span><span class="service-tab-arrow" aria-hidden="true">${icon('plus','service-expand-icon')}${icon('check','service-selected-icon')}</span><span class="service-tab-copy"><strong>${s[lang]}</strong><small>${s.eyebrow}</small></span></button>`).join('');
@@ -78,9 +87,9 @@ export function renderHome(template,{lang='ar',origin='',verification=''}={}){
  if(lang==='en'){$('#layer-description').textContent='A metal surface protects the insulation core. Finish and materials are specified for the project environment.';$('#climate-name').textContent='Frozen';$('#render-quality span').textContent='Light view';$('#mobile-menu').setAttribute('aria-label','Mobile navigation');}
  return '<!doctype html>\n'+d.documentElement.outerHTML;
 }
-export function renderServicePage({lang,service,origin='',verification=''}){
+export function renderServicePage({lang,service,origin='',verification='',share=origin}){
  const ar=lang==='ar',c=details[service.id][lang],home=homePath(lang),subject=(ar?'استفسار عن ':'Inquiry about ')+service[lang],body=(ar?'مرحباً درعوزي، أود الاستفسار عن ':'Hello HMD Darouzi, I would like to discuss ')+service[lang]+'.';
- return `<!doctype html><html lang="${lang}" dir="${ar?'rtl':'ltr'}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f6f9ff"><link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180"><link rel="stylesheet" href="/assets/service-guide.css">${metadata({lang,origin,service,verification})}</head><body>
+ return `<!doctype html><html lang="${lang}" dir="${ar?'rtl':'ltr'}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f6f9ff"><link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180"><link rel="stylesheet" href="/assets/service-guide.css">${metadata({lang,origin,service,verification,share})}</head><body>
 <a class="skip" href="#main">${ar?'انتقل إلى المحتوى':'Skip to content'}</a>
 <header class="guide-header"><a href="${home}" aria-label="HMD Darouzi"><img src="/assets/logo.webp" width="140" height="71" alt="HMD Darouzi · درعوزي"></a><nav aria-label="${ar?'التنقل الرئيسي':'Main navigation'}"><a href="${home}#solutions">${ar?'مجالات الشركة':'Our solutions'}</a><a href="${home}#products">${ar?'قطع التبريد':'Refrigeration parts'}</a><a href="${servicePath(service.id,ar?'en':'ar')}" hreflang="${ar?'en':'ar'}" lang="${ar?'en':'ar'}">${ar?'English':'العربية'}</a></nav></header>
 <main id="main"><nav class="breadcrumb" aria-label="${ar?'مسار التنقل':'Breadcrumb'}"><a href="${home}">${ar?'الرئيسية':'Home'}</a><span aria-hidden="true">/</span><span>${service[lang]}</span></nav>
@@ -90,12 +99,41 @@ ${details[service.id].parts.length?`<section class="related"><h2>${ar?'قطع و
 <section class="guide-contact" id="inquiry"><div><p class="eyebrow">${ar?'طلب عرض سعر':'REQUEST A QUOTE'}</p><h2>${ar?'لنتحدث عن مشروعك.':'Let’s talk about your project.'}</h2><p>${ar?'أرسل المتطلبات المتاحة لفريق درعوزي. يمكنك إرفاق المواصفات والصور في تطبيقك قبل الإرسال.':'Share the requirements you have with the Darouzi team. Add specifications and photographs in your chosen app before sending.'}</p><div class="contact-actions"><a class="primary" href="${whatsappLink(lang,body)}">${icon('brand-whatsapp')}${ar?'تواصل عبر واتساب':'Contact via WhatsApp'}</a><a class="secondary" href="mailto:h.darouzi@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}">${icon('mail')}${ar?'أرسل بريداً إلكترونياً':'Send an email'}</a></div></div><address><strong>HMD Darouzi · درعوزي</strong><a href="tel:+963944699555" dir="ltr">+963 944 699 555</a><a href="mailto:h.darouzi@gmail.com">h.darouzi@gmail.com</a><p>${ar?'مكتب المبيعات: حلب، الجميلية، بناء مديرية الأوقاف.':'Sales office: Al-Jamiliyah, Awqaf Directorate building, Aleppo.'}</p><p>${ar?'المنشأة الصناعية: حلب، مدينة الشيخ نجار الصناعية.':'Industrial facility: Sheikh Najjar Industrial City, Aleppo.'}</p></address></section>
 <nav class="other-services" aria-label="${ar?'مجالات التبريد':'Refrigeration services'}"><h2>${ar?'استكشف مجالاتنا':'Explore our services'}</h2>${services.filter(s=>s.id!==service.id).map(s=>`<a href="${servicePath(s.id,lang)}">${s[lang]} ${icon('arrow-right','forward')}</a>`).join('')}</nav></main><footer><a href="${home}">HMD Darouzi · درعوزي</a><a href="${faqPath(lang)}">${faqMeta[lang].name}</a><a href="${privacyPath(lang)}">${privacyMeta[lang].name}</a><a href="/hmd-darouzi-profile.pdf">${ar?'تحميل ملف الشركة (PDF)':'Download company profile (PDF)'}</a><span>${ar?'حلب، سوريا':'Aleppo, Syria'}</span></footer></body></html>`;
 }
+// Plain-text company summary for AI assistants and answer engines (llmstxt.org convention).
+export function llmsText(origin=''){
+ const ar=services.map(s=>`- [${s.ar}](${origin+servicePath(s.id,'ar')}): ${s.descAr}`).join('\n'),en=services.map(s=>`- [${s.en}](${origin+servicePath(s.id,'en')}): ${s.descEn}`).join('\n');
+ return `# HMD Darouzi (درعوزي للتبريد)
+
+> HMD Darouzi — known in Arabic as درعوزي, درعوزي للتبريد, HMD درعوزي and شركة درعوزي — is an industrial refrigeration company in Aleppo, Syria. It manufactures and supplies cold and freezer rooms, water chillers, cooling towers, block ice plants, refrigerated vehicle bodies and sandwich-panel thermal insulation, and sells refrigeration parts at retail.
+
+درعوزي للتبريد (HMD Darouzi) شركة تبريد صناعي في حلب، سوريا: غرف تبريد وتجميد، شيلرات تبريد مياه، أبراج تبريد، معامل ألواح ثلج، صناديق سيارات مبردة، عزل حراري بألواح الساندويش بانل، وقطع تبريد بالمفرق.
+
+## Contact
+- Phone / WhatsApp: +963 944 699 555
+- Landline: +963 21 2250266, +963 21 2254755
+- Email: h.darouzi@gmail.com
+- Sales office: Al-Jamiliyah, Awqaf Directorate building, Aleppo, Syria (حلب، الجميلية، بناء مديرية الأوقاف)
+- Industrial facility: Sheikh Najjar Industrial City, Aleppo, Syria (المدينة الصناعية بالشيخ نجار)
+- Instagram: ${socialLinks.instagram}
+- Facebook: ${socialLinks.facebook}
+
+## Services (العربية)
+${ar}
+
+## Services (English)
+${en}
+
+## More
+- [الصفحة الرئيسية](${origin+homePath('ar')}) · [Home (English)](${origin+homePath('en')})
+- [الأسئلة الشائعة](${origin+faqPath('ar')}) · [FAQ (English)](${origin+faqPath('en')})
+- [Company profile (PDF)](${origin}/hmd-darouzi-profile.pdf)
+`;}
 export function sitemap(origin){return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">${routes.map(route=>`<url><loc>${origin+route.path}</loc>${['ar','en','x-default'].map(l=>`<xhtml:link rel="alternate" hreflang="${l}" href="${origin+(route.service?servicePath(route.service.id,l==='x-default'?'ar':l):homePath(l==='x-default'?'ar':l))}"/>`).join('')}</url>`).join('\n')}</urlset>`;}
 
 // Script-free information pages (FAQ, privacy) share the service guides' header, footer and stylesheet.
-function infoPage({lang,origin='',verification='',kind,path,name,body}){
+function infoPage({lang,origin='',verification='',share=origin,kind,path,name,body}){
  const ar=lang==='ar',home=homePath(lang),other=ar?'en':'ar';
- return `<!doctype html><html lang="${lang}" dir="${ar?'rtl':'ltr'}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f6f9ff"><link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180"><link rel="stylesheet" href="/assets/service-guide.css">${metadata({lang,origin,[kind]:true,verification})}</head><body>
+ return `<!doctype html><html lang="${lang}" dir="${ar?'rtl':'ltr'}"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="theme-color" content="#f6f9ff"><link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32"><link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" sizes="any"><link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" sizes="180x180"><link rel="stylesheet" href="/assets/service-guide.css">${metadata({lang,origin,[kind]:true,verification,share})}</head><body>
 <a class="skip" href="#main">${ar?'انتقل إلى المحتوى':'Skip to content'}</a>
 <header class="guide-header"><a href="${home}" aria-label="HMD Darouzi"><img src="/assets/logo.webp" width="140" height="71" alt="HMD Darouzi · درعوزي"></a><nav aria-label="${ar?'التنقل الرئيسي':'Main navigation'}"><a href="${home}#solutions">${ar?'مجالات الشركة':'Our solutions'}</a><a href="${home}#contact">${ar?'تواصل معنا':'Contact'}</a><a href="${path(other)}" hreflang="${other}" lang="${other}">${ar?'English':'العربية'}</a></nav></header>
 <main id="main" class="policy"><nav class="breadcrumb" aria-label="${ar?'مسار التنقل':'Breadcrumb'}"><a href="${home}">${ar?'الرئيسية':'Home'}</a><span aria-hidden="true">/</span><span>${name}</span></nav>
@@ -103,15 +141,15 @@ function infoPage({lang,origin='',verification='',kind,path,name,body}){
 <footer><a href="${home}">HMD Darouzi · درعوزي</a><a href="${kind==='faq'?privacyPath(lang):faqPath(lang)}">${kind==='faq'?privacyMeta[lang].name:faqMeta[lang].name}</a><a href="/hmd-darouzi-profile.pdf">${ar?'تحميل ملف الشركة (PDF)':'Download company profile (PDF)'}</a><span>${ar?'حلب، سوريا':'Aleppo, Syria'}</span></footer></body></html>`;
 }
 const contactBlock=(lang,lead,back)=>`<section class="policy-contact"><p>${lead}</p><address><a href="tel:+963944699555" dir="ltr">+963 944 699 555</a><a href="mailto:h.darouzi@gmail.com">h.darouzi@gmail.com</a><span>${lang==='ar'?'حلب، الجميلية، بناء مديرية الأوقاف':'Al-Jamiliyah, Awqaf Directorate building, Aleppo'}</span></address><a class="primary" href="${homePath(lang)}">${back} ${icon('arrow-right','forward')}</a></section>`;
-export function renderPrivacyPage({lang,origin='',verification=''}){
+export function renderPrivacyPage({lang,origin='',verification='',share=origin}){
  const c=privacyCopy[lang];
- return infoPage({lang,origin,verification,kind:'privacy',path:privacyPath,name:privacyMeta[lang].name,body:`<p class="policy-updated">${c.updated}: <time datetime="${privacyUpdated.iso}">${privacyUpdated[lang]}</time></p><p class="lede">${c.intro}</p>
+ return infoPage({lang,origin,verification,share,kind:'privacy',path:privacyPath,name:privacyMeta[lang].name,body:`<p class="policy-updated">${c.updated}: <time datetime="${privacyUpdated.iso}">${privacyUpdated[lang]}</time></p><p class="lede">${c.intro}</p>
 ${c.sections.map(([title,text])=>`<section><h2>${title}</h2><p>${text}</p></section>`).join('')}
 ${contactBlock(lang,c.contact,c.back)}`});
 }
-export function renderFaqPage({lang,origin='',verification=''}){
+export function renderFaqPage({lang,origin='',verification='',share=origin}){
  const ar=lang==='ar';
- return infoPage({lang,origin,verification,kind:'faq',path:faqPath,name:faqMeta[lang].name,body:`<p class="lede">${ar?'إجابات مختصرة عن أكثر ما يسألنا عنه أصحاب المشاريع والفنيون. لكل مشروع تفاصيله، لذلك نؤكد المواصفات والأسعار معك مباشرة.':'Short answers to what project owners and technicians ask us most. Every project has its own details, so we confirm specifications and prices with you directly.'}</p>
+ return infoPage({lang,origin,verification,share,kind:'faq',path:faqPath,name:faqMeta[lang].name,body:`<p class="lede">${ar?'إجابات مختصرة عن أكثر ما يسألنا عنه أصحاب المشاريع والفنيون. لكل مشروع تفاصيله، لذلك نؤكد المواصفات والأسعار معك مباشرة.':'Short answers to what project owners and technicians ask us most. Every project has its own details, so we confirm specifications and prices with you directly.'}</p>
 ${faqItems[lang].map(([question,answer])=>`<section><h2>${question}</h2><p>${answer}</p></section>`).join('')}
 ${contactBlock(lang,ar?'لم تجد إجابتك؟ تواصل معنا:':'Didn’t find your answer? Contact us:',ar?'العودة إلى الرئيسية':'Back to home')}`});
 }
