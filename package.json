@@ -1,0 +1,36 @@
+{
+  "name": "hmd-darouzi",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "npm run icons:build && vite build",
+    "icons:build": "node scripts/build-icons.mjs",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node tests/site.mjs",
+    "test:experience": "node tests/experience.mjs",
+    "test:performance": "node tests/performance.mjs",
+    "test:design": "node tests/design.mjs",
+    "test:footer": "node tests/footer.mjs",
+    "test:project-tools": "node tests/project-tools.mjs",
+    "test:equipment-tools": "node tests/equipment-tools.mjs",
+    "test:mobile": "node tests/mobile.mjs",
+    "test:phone-tools": "node tests/phone-tools.mjs",
+    "test:seo": "node tests/seo.mjs",
+    "test:security": "node tests/security.mjs",
+    "test:projects": "node tests/projects.mjs",
+    "test:repair": "node tests/repair.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.0",
+    "@playwright/test": "^1.55.0",
+    "@tabler/icons": "^3.49.0",
+    "lighthouse": "^13.5.0",
+    "linkedom": "^0.18.13",
+    "vite": "^7.1.0"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  }
+}

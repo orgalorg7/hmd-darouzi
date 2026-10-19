@@ -1,0 +1,19 @@
+/* A direct WhatsApp chat in reach on every screen. A native link: no script, widget or third-party request. */
+.whatsapp-fab{position:fixed;inset-inline-end:max(24px,env(safe-area-inset-right,0px));bottom:calc(24px + env(safe-area-inset-bottom,0px));z-index:17;display:inline-flex;align-items:center;gap:9px;min-height:52px;padding:0 20px 0 16px;border-radius:999px;background:#0a7d55;color:#fff;font-size:15px;font-weight:600;text-decoration:none;box-shadow:0 10px 24px #06402b2e,0 2px 0 #065c3d;transition:background .2s,transform .2s}
+.whatsapp-fab .ui-icon{width:26px;height:26px}
+.whatsapp-fab:hover{background:#086a48;transform:translateY(-2px)}
+.whatsapp-fab:focus-visible{outline:3px solid #174ee8;outline-offset:3px}
+body:has(dialog[open]) .whatsapp-fab,body:has(.menu-toggle[aria-expanded=true]) .whatsapp-fab{display:none}
+/* Keep the closing footer row clear when the page is scrolled to its end. */
+footer.site-footer{padding-bottom:84px}
+@media(max-width:640px){
+ .whatsapp-fab{width:56px;height:56px;min-height:0;padding:0;justify-content:center;inset-inline-end:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+ .whatsapp-fab span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+ .whatsapp-fab .ui-icon{width:28px;height:28px}
+ /* Sit above the shortcut dock and step aside for the on-screen keyboard, like the dock itself. */
+ body:has(#mobile-dock:not([hidden])) .whatsapp-fab{bottom:calc(88px + env(safe-area-inset-bottom,0px))}
+ body.mobile-editing .whatsapp-fab{display:none}
+ footer.site-footer{padding-bottom:72px}
+}
+@media(prefers-reduced-motion:reduce){.whatsapp-fab{transition:none}.whatsapp-fab:hover{transform:none}}
+@media print{.whatsapp-fab{display:none}}

@@ -1,0 +1,74 @@
+/* One outline family, one weight. Physical rotation stays fixed in RTL. */
+.ui-icon{display:inline-block;width:20px;height:20px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle;pointer-events:none}
+[dir=rtl] .icon-forward{transform:scaleX(-1)}
+.lang-button{align-items:center;gap:8px}
+.lang-button .ui-icon{width:18px;height:18px}
+#render-quality{margin-inline-start:0;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:7px 10px;min-height:36px;line-height:1.2;border-color:#b8c9df;background:#f9fbff;color:#294d78;box-shadow:none}
+#render-quality .ui-icon{width:17px;height:17px}
+#render-quality:hover{background:#e3edff;border-color:#7d9fce;color:#174ee8}
+#render-quality:active{transform:translateY(1px)}
+.button .action-icon{display:grid;place-items:center}
+.button:hover>span.action-icon:last-child{transform:none}
+.action-icon .ui-icon{width:20px;height:20px}
+.text-link>.ui-icon{width:18px;height:18px}
+.scene-actions button,.inspection-tools button,.dialog-close,.product-dialog-close,.builder-active .builder-close,#close-component,.product-quote{display:inline-flex;align-items:center;justify-content:center}
+#door-toggle{gap:6px}
+#door-toggle .ui-icon{width:17px;height:17px}
+.scene-actions .ui-icon,.inspection-tools .ui-icon{width:20px;height:20px}
+.view-switch button{display:inline-flex;align-items:center;justify-content:center;gap:7px}
+.view-switch .ui-icon{width:18px;height:18px}
+.hotspot{display:grid;place-items:center;padding:0}
+.hotspot .ui-icon{width:18px;height:18px}
+.hotspot-mark{transition:transform .2s ease}
+.hotspot[aria-expanded=true] .hotspot-mark{transform:rotate(45deg)}
+.scene-bottomline .drag-hint{padding-inline-start:0}
+.scene-bottomline .drag-hint::before{content:none}
+.service-tab-arrow{border-radius:8px}
+.service-gallery .solution-tab:hover .service-tab-arrow{transform:none}
+.service-selected-icon{display:none}
+[aria-selected=true] .service-expand-icon{display:none}
+[aria-selected=true] .service-selected-icon{display:block}
+.layer-tabs button>span:last-child{display:grid;place-items:center}
+.layer-tabs .ui-icon{width:19px;height:19px}
+.inspect-label{display:inline-flex;align-items:center}
+.inspect-label .ui-icon{width:18px;height:18px}
+.product-quote:hover{transform:none}
+.product-quote .ui-icon{width:20px;height:20px}
+.profile-icon{display:grid;place-items:center;width:40px;height:44px}
+.profile-icon .ui-icon{width:30px;height:30px;stroke-width:1.5}
+.about-points>div{grid-template-columns:26px 1fr}
+.about-points>div>span{padding-top:2px}
+.about-points .ui-icon{width:22px;height:22px}
+.contact-details>a>strong{display:flex;align-items:center;gap:16px}
+.contact-details>a>strong .ui-icon{width:22px;height:22px}
+.back-top{display:inline-flex;align-items:center;gap:9px}
+.back-top .ui-icon{width:17px;height:17px}
+.menu-toggle{position:relative;align-items:center;justify-content:center;min-width:40px;min-height:40px;padding:8px}
+.menu-toggle .ui-icon{width:24px;height:24px;color:var(--text)}
+.menu-close-icon{display:none}
+.menu-toggle[aria-expanded=true] .menu-open-icon{display:none}
+.menu-toggle[aria-expanded=true] .menu-close-icon{display:block}
+@media(max-width:900px){.menu-toggle{display:flex}}
+@media(min-width:641px) and (max-width:900px){.scene-topline{top:36px}}
+@media(max-width:640px){
+ #render-quality{gap:5px;padding:6px 8px;min-height:32px}
+ #render-quality .ui-icon{width:15px;height:15px}
+ .view-switch button{gap:5px;padding-inline:8px}
+ .view-switch .ui-icon{width:16px;height:16px}
+ .scene-actions button{padding-inline:7px}
+ .scene-actions .ui-icon{width:18px;height:18px}
+ #door-toggle .ui-icon{width:15px;height:15px}
+ .inspect-label .ui-icon{width:16px;height:16px}
+ .contact-details>a>strong{gap:10px}
+ .contact-details>a>strong .ui-icon{width:19px;height:19px}
+}
+@media(prefers-reduced-motion:reduce){.hotspot-mark{transition:none}}
+
+.quote-send-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.quote-send-actions .button{min-width:0;gap:10px;padding:11px 14px;font-size:13px}
+.quote-send-actions .quote-email{background:#fff;color:#174ee8;border-color:#a5bde6;box-shadow:0 3px 0 #d5e1f4}
+.quote-send-actions .quote-email::before{background:#eaf1ff}
+.quote-send-actions .quote-email .action-icon{background:#edf3ff;color:#174ee8}
+.quote-send-actions .quote-email:hover{border-color:#174ee8;color:#174ee8}
+.quote-send-actions .button .action-icon{width:29px;height:29px;flex-basis:29px}
+@media(max-width:480px){.quote-send-actions{grid-template-columns:1fr;gap:10px}.quote-send-actions .button{min-height:48px;font-size:13px;padding:9px 15px}}

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+test-results/
+.DS_Store
+
+.env
+.env.local
+.env.*.local
+
+# Third-party reference site copy (kept locally, not published)
+esadpanel.com/

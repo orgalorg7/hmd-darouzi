@@ -1,0 +1,4 @@
+/* Crawlable service links share the existing typography and layout. */
+.lang-button{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+#service-guide{grid-column:2;justify-self:start;font-size:14px;margin-top:14px}
+@media(max-width:640px){#service-guide{grid-column:1;min-height:44px;font-size:14px}.hero-content .eyebrow{font-size:11px!important;letter-spacing:0}}

@@ -1,0 +1,57 @@
+/* Demand-driven plan view and application selection; no background animation. */
+#blueprint-panel[hidden],#render-quality[hidden],#cooling-result[hidden],.quote-application[hidden]{display:none}
+#blueprint-panel{position:absolute;inset:65px 14% 75px 45px;z-index:3;display:grid;grid-template-rows:auto minmax(0,1fr) auto auto;gap:10px;direction:inherit;padding:20px;border:1px solid #9db8dc;border-radius:12px;background:#eff5ff}
+.blueprint-heading{display:flex;justify-content:space-between;align-items:center;color:#183b68;font-size:13px;gap:10px}
+.blueprint-size{font:600 17px Manrope,sans-serif;color:#174ee8}
+.blueprint-drawing{width:100%;height:100%;min-height:0;direction:ltr}
+.blueprint-drawing [data-bp-marker],.blueprint-drawing [data-bp-number]{cursor:pointer}
+.room-stage[data-room-view=blueprint] :is(#rotate-left,#rotate-right,#reset-view){display:none}
+.blueprint-parts{display:flex;gap:7px;direction:inherit}
+.blueprint-parts button{display:flex;align-items:center;justify-content:center;gap:7px;flex:1;min-width:0;min-height:42px;padding:7px;border:1px solid #b2c8e5;background:#fff;color:#24466c;border-radius:6px;font-size:11px}
+.blueprint-parts small{border:1px solid #b7cae4;border-radius:50%;width:18px;height:18px;display:grid;place-items:center;font-family:Manrope,sans-serif}
+.blueprint-parts button[aria-expanded=true],.blueprint-parts button:hover{background:#174ee8;color:#fff;border-color:#174ee8}
+.blueprint-note{margin:0;font-size:10px;line-height:1.5;color:#476283;text-align:center}
+#blueprint-panel:has([data-blueprint-part=cooling][aria-expanded=true]) .bp-cooling{fill:#aacdff}
+#blueprint-panel:has([data-blueprint-part=panels][aria-expanded=true]) .bp-wall-outer{stroke:#174ee8;stroke-width:6}
+#blueprint-panel:has([data-blueprint-part=door][aria-expanded=true]) .bp-door-leaf{stroke:#e09c00;stroke-width:5}
+.room-stage[data-room-view=blueprint] .scene-host,.room-stage[data-room-view=blueprint] .scene-hotspots{display:none}
+.hero .view-switch{left:32%;transform:translateX(-50%);max-width:54%}
+.hero .view-switch button{padding-inline:16px}
+.cooling-finder{margin:0 0 36px;padding:28px 0;border-block:1px solid #c5d6ec}
+.cooling-question{display:flex;align-items:baseline;gap:24px;margin-bottom:18px;flex-wrap:wrap}
+.cooling-question h3{font-size:27px;letter-spacing:-.025em;line-height:1.35}
+.cooling-question p{font-size:13px;color:#476283;margin:0}
+.cooling-choices{display:flex;gap:10px;flex-wrap:wrap}
+.cooling-choices button{display:flex;align-items:center;gap:12px;min-height:56px;padding:12px 24px;border:1px solid #b5c9e5;background:#fff;border-radius:8px;color:#24466c;font-size:14px}
+.cooling-choices .ui-icon{width:23px;height:23px;color:#174ee8}
+.cooling-choices button:hover{border-color:#174ee8}
+.cooling-choices button[aria-pressed=true]{background:#17395f;border-color:#17395f;color:#fff}
+.cooling-choices button[aria-pressed=true] .ui-icon{color:#ffdb64}
+#cooling-result{padding-top:23px}
+#cooling-summary{max-width:760px;color:#365777;font-size:14px;line-height:1.8;margin:0 0 18px}
+.cooling-result-actions{display:flex;align-items:center;gap:24px;justify-content:space-between}
+#cooling-links{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#cooling-links button{border:0;border-bottom:1px solid #7c9cc9;border-radius:0;background:none;padding:8px 0;color:#1748b2;font-size:13px;margin-inline-end:14px}
+#cooling-inquiry{font-size:12px;min-height:44px;padding:10px 16px;gap:20px;flex-shrink:0}
+#cooling-reset{margin-top:15px;font-size:11px;color:#476283;border:0;background:none;padding:5px 0}
+.solution-tab[data-relevant=true]{box-shadow:inset 0 0 0 2px #174ee8}
+.quote-application{border-inline-start:3px solid #174ee8;padding:9px 14px;background:#e7effc;margin:0 0 20px;font-size:13px;color:#24466c}
+@media(max-width:900px){
+ .hero .view-switch{left:32px;right:32px;transform:none;max-width:none;justify-content:center}
+ #blueprint-panel{inset:75px 32px 58px;padding:14px}
+ .cooling-result-actions{align-items:flex-start;flex-direction:column;gap:16px}
+}
+@media(max-width:640px){
+ .hero .view-switch{left:20px;right:20px;bottom:83px;gap:2px}
+ .hero .view-switch button{flex:1;min-width:0;flex-direction:column;justify-content:center;gap:4px;padding:7px 3px;font-size:10px;line-height:1.3}
+ .hero .view-switch button .ui-icon{width:17px;height:17px}
+ #blueprint-panel{inset:28px 20px 38px;gap:3px;padding:7px 8px;border-radius:8px}
+ .blueprint-heading{font-size:10px}.blueprint-size{font-size:12px}
+ .blueprint-parts{gap:4px}.blueprint-parts button{font-size:10px;gap:4px;min-height:34px;padding:4px}
+ .blueprint-parts button .ui-icon{width:14px;height:14px}.blueprint-parts small{display:none}
+ .blueprint-note{font-size:8px;line-height:1.4}
+ .cooling-finder{padding:22px 0;margin-bottom:26px}
+ .cooling-question{gap:8px;margin-bottom:15px}.cooling-question h3{font-size:24px}.cooling-question p{font-size:12px}
+ .cooling-choices{gap:8px}.cooling-choices button{font-size:12px;padding:10px 12px;min-height:48px;gap:8px}.cooling-choices .ui-icon{width:20px;height:20px}
+ #cooling-summary{font-size:12px}#cooling-links{gap:4px 10px}#cooling-links button{font-size:12px;margin:0}
+}

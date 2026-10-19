@@ -1,0 +1,126 @@
+/* A phone layout built around readable content and reachable, native controls. */
+.mobile-dock{display:none}
+@media(max-width:640px){
+ html{scroll-padding-top:82px;scroll-padding-bottom:100px}
+ body{padding-bottom:calc(82px + env(safe-area-inset-bottom,0px))}
+ .wrap{width:calc(100% - 40px)}
+ .section{padding-block:56px}
+ section[id],.lab-hero{scroll-margin-top:16px}
+ .site-header{height:70px;padding-inline:20px;background:#f9fbff!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+ .site-header::after{display:none}
+ .brand img{width:99px;height:49px}.header-actions{gap:10px}
+ .lang-button,.menu-toggle{min-width:44px;min-height:44px;justify-content:center;align-items:center}
+ .lang-button{font-size:12px;gap:6px}.menu-toggle{padding:10px;border:1px solid #cad8eb;border-radius:10px}
+ .mobile-menu{inset-inline:12px;top:80px;max-height:calc(100dvh - 104px);padding:10px 18px 18px;border:1px solid #c5d4e8;border-radius:16px;overflow-y:auto;overscroll-behavior:contain;box-shadow:0 12px 32px #17375c20}
+ .mobile-menu a{font-size:17px;padding:16px 4px;min-height:56px}
+ .mobile-menu a:last-child{border:0}
+ /* Natural flow avoids the fixed-height collisions caused by translated copy and text zoom. */
+ .hero.lab-hero{display:flex;flex-direction:column;height:auto;min-height:0;max-height:none;padding:25px 0 22px;gap:0;overflow:hidden}
+ .lab-hero.hero .hero-content,html[lang=en] .lab-hero.hero .hero-content{position:relative;inset:auto;width:calc(100% - 40px);margin:0 20px;order:1}
+ .lab-hero.hero h1,html[lang=en] .lab-hero.hero h1{font-size:clamp(34px,10.8vw,45px);line-height:1.14;letter-spacing:-.045em}
+ html[lang=ar] .lab-hero.hero h1{line-height:1.3;letter-spacing:-.025em}
+ .lab-hero.hero .hero-content .eyebrow{font-size:11px;margin-bottom:12px}
+ .lab-hero.hero .hero-description,html[lang=en] .lab-hero.hero .hero-description{font-size:14px;line-height:1.8;margin-top:16px;max-width:36ch}
+ .lab-hero.hero .hero-actions{gap:18px;margin-top:20px;flex-wrap:wrap}
+ .lab-hero.hero .hero-actions .button{font-size:13px;min-height:52px;padding:10px 14px;gap:16px}
+ .lab-hero.hero .hero-content .text-link{min-height:48px;font-size:13px;gap:10px}
+ .hero .room-stage,.hero.configuring .room-stage{position:relative;inset:auto;order:2;width:100%;height:clamp(350px,96vw,410px);margin-top:22px;flex-shrink:0}
+ .room-stage .scene-host,.room-stage .scene-hotspots{inset:44px 0 54px}
+ .hero .scene-topline{top:0;left:20px;right:20px;min-height:44px;font-size:12px;justify-content:space-between;gap:8px;direction:inherit}
+ .hero .scene-topline .model-caption{display:none}
+ #render-quality{min-height:44px;padding:8px 12px;font-size:11px;gap:7px;flex-shrink:0}
+ .hero .scene-bottomline{bottom:0;left:20px;right:20px;min-height:48px;justify-content:center;gap:8px}
+ .hero .scene-bottomline .drag-hint{display:none}
+ .scene-actions{gap:8px;width:100%;justify-content:center}
+ .scene-actions button{min-height:44px;font-size:12px;border-radius:9px;padding:9px 12px}
+ .scene-actions #door-toggle{flex:1;max-width:160px;gap:8px}
+ .scene-actions #rotate-left,.scene-actions #rotate-right,.scene-actions #reset-view{width:44px;min-width:44px;min-height:44px}
+ .scene-lite .scene-actions :is(#rotate-left,#rotate-right,#reset-view){display:none}
+ .scene-lite .scene-actions #door-toggle{max-width:none}
+ .hotspot{width:44px;height:44px;box-shadow:0 0 0 4px #ffffff80}
+ .hotspot .ui-icon{width:20px;height:20px}
+ .hero .view-switch{position:relative;inset:auto;transform:none;order:3;margin:12px 20px 0;width:calc(100% - 40px);max-width:none;min-height:66px;gap:2px;padding:4px;background:#f9fbff;border-radius:12px;box-shadow:none}
+ .hero .view-switch button{min-height:56px;font-size:11px;gap:5px;padding:7px 3px;border-radius:8px}
+ .hero .view-switch button .ui-icon{width:20px;height:20px}
+ .hero .climate-control,html[lang=en] .hero .climate-control,.hero.configuring .climate-control{position:relative;inset:auto;order:4;width:calc(100% - 40px);margin:16px 20px 0;gap:14px;justify-content:space-between}
+ .climate-number{min-width:75px}.climate-number output{font-size:48px}.climate-number>span{display:none}
+ .climate-presets{flex:1;max-width:240px}.climate-presets button{flex:1;min-width:0;min-height:62px;padding:8px 7px;gap:6px}.climate-presets button>span{font-size:17px}.climate-presets button small{font-size:11px}
+ .climate-presets button:hover{transform:none}
+ .hero .hero-environment,.hero.configuring .hero-environment{top:285px;bottom:120px;opacity:.65}
+ .scene-watermark,.scene-orbit{display:none}
+ .component-note{left:20px;right:20px;bottom:56px;width:auto;padding:24px;background:#f9fbff;backdrop-filter:none;box-shadow:0 6px 24px #17375c1a;max-height:calc(100% - 64px);overflow-y:auto}
+ .component-note>button{min-width:44px;min-height:44px;top:4px;inset-inline-end:4px}.component-note h3{padding-inline-end:16px;font-size:23px}.component-note p{font-size:14px}.component-note .text-link{min-height:44px;font-size:13px}
+ #blueprint-panel{inset:46px 20px 54px;gap:6px;padding:10px;grid-template-rows:auto minmax(0,1fr) auto auto}
+ .blueprint-heading{font-size:12px}.blueprint-size{font-size:14px}.blueprint-note{font-size:10px}.blueprint-parts button{font-size:11px;min-height:44px;padding:6px 3px}
+ .blueprint-parts button .ui-icon{width:16px;height:16px}
+ .hero.configuring .hero-content{display:none}
+ .room-builder.builder-active{position:relative;inset:auto;order:1;width:calc(100% - 40px);margin:0 20px;padding:0;gap:18px;animation:none}
+ .builder-active .builder-close{width:44px;height:44px;top:0;inset-inline-end:0}
+ .builder-active .builder-heading h2{padding-inline-end:55px;min-height:44px;font-size:27px;margin:0}
+ .builder-active .builder-controls{gap:12px 24px}.builder-controls label{font-size:14px;gap:8px}.builder-controls output{font-size:20px}
+ .builder-active .builder-summary{grid-template-columns:1fr auto;gap:4px 10px;padding-top:14px}
+ .builder-summary>span,.builder-height{font-size:12px}.builder-active .builder-summary>.button{grid-column:1/-1;grid-row:4;margin-top:10px;font-size:14px;min-height:48px;width:100%;justify-content:space-between}
+ .room-builder{gap:24px;padding-block:32px}.builder-heading h2{font-size:28px}.builder-heading p{font-size:14px;max-width:none}
+ .builder-summary>.button,html[lang=en] .builder-summary>.button{font-size:13px;min-height:48px}
+ /* A 44px interaction surface with the same slim range track. */
+ input[type=range]{height:44px!important;padding:0;border:0;background:linear-gradient(to right,#174ee8 0 var(--range-fill),#c5d6ee var(--range-fill) 100%) center/100% 5px no-repeat}
+ input[type=range]::-webkit-slider-thumb{width:26px;height:26px}
+ input[type=range]::-moz-range-thumb{width:20px;height:20px;border:4px solid #fff;background:#174ee8;border-radius:50%}
+ .facts{grid-template-columns:1fr 1fr;gap:24px 0;padding-block:28px}.fact{padding-inline:18px}.fact:nth-child(3){border-inline-start:0;padding-inline-start:0}.fact-value{font-size:40px}.fact>p,html[lang=en] .fact>p{font-size:12px}.fact-text>p{font-size:17px}.fact-text>span{font-size:12px}
+ .section-heading h2,html[lang=en] .section-heading h2{font-size:35px;line-height:1.2}.section-heading>p:last-child{font-size:15px;line-height:1.8}
+ .js-reveal .reveal,.js-reveal .reveal.visible{opacity:1;transform:none;transition:none;filter:none}
+ .cooling-question{display:block}.cooling-question h3{font-size:26px}.cooling-question p{font-size:14px;margin-top:8px}
+ .cooling-choices{display:grid;grid-template-columns:1fr;gap:8px}.cooling-choices button{font-size:15px;padding:12px 16px;min-height:54px;gap:14px;text-align:start}.cooling-choices .ui-icon{width:24px;height:24px}
+ #cooling-summary{font-size:14px}#cooling-links button,#cooling-reset{font-size:13px;min-height:44px}#cooling-inquiry{width:100%;min-height:48px;font-size:14px}
+ /* All six fields stay discoverable; selecting one never resizes its neighbours. */
+ .solution-tabs.service-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));height:auto;width:100%;gap:10px;padding:0;overflow:visible;scroll-snap-type:none}
+ .service-gallery .solution-tab,.service-gallery .solution-tab[aria-selected=true]{height:154px;min-width:0;flex:none;transition:border-color .15s,background .15s;box-shadow:none;border-radius:12px}
+ .service-gallery .solution-tab::before,.service-gallery .solution-tab[aria-selected=true]::before{display:none}
+ .service-gallery .service-thumb,.service-gallery .solution-tab[data-service][aria-selected=true] .service-thumb{inset:9px 10px 56px;padding:4px;overflow:hidden;border-radius:7px}
+ .service-gallery .service-thumb img,.service-gallery .solution-tab[data-service][aria-selected=true] .service-thumb img{width:100%;height:100%;object-fit:contain;filter:none;transform:none;mix-blend-mode:multiply;transition:none}
+ .service-gallery .solution-tab[data-service=cold] .service-thumb img,.service-gallery .solution-tab[data-service=towers] .service-thumb img{object-fit:cover;mix-blend-mode:normal}
+ .service-tab-copy{left:12px;right:12px;bottom:11px;min-height:38px;justify-content:center}
+ .service-gallery .service-tab-copy strong,.service-gallery .solution-tab[aria-selected=true] .service-tab-copy strong,html[lang=en] .service-tab-copy strong{font-size:14px;line-height:1.35}
+ .service-gallery .service-tab-copy small{display:none!important}.service-tab-arrow{top:10px;inset-inline-end:10px;width:26px;height:26px}.service-tab-arrow .ui-icon{width:15px;height:15px}
+ .solution-copy{padding-top:24px;gap:18px}.solution-copy h3,html[lang=en] .solution-copy h3{font-size:29px}.solution-copy>p{font-size:15px;line-height:1.85}.service-specs{gap:25px}.service-specs small{font-size:12px}.service-specs strong{font-size:20px}.solution-copy>.button{width:100%;min-height:50px;justify-content:space-between;font-size:14px}
+ .installation{padding-top:8px}.installation-detail h3{font-size:30px}.installation-parts button{font-size:13px;min-height:66px}.installation-detail #installation-description{font-size:15px}.installation-detail #installation-spec-note{font-size:13px}.installation-detail{min-height:0}.installation-actions{gap:12px;margin-top:24px}.installation-actions .button{width:100%;font-size:14px;min-height:50px}.installation-actions .text-link,.installation-tray-link{font-size:13px;min-height:44px}.installation-photo-footer{font-size:12px;gap:12px}.installation-source{display:flex;align-items:center;min-height:44px}
+ .insulation-intro,.layer-detail p{font-size:14px}.panel-control-label,.panel-control-ends{font-size:12px}.panel-disclaimer{font-size:12px;max-width:35ch}.layer-tabs button{min-height:52px}.layer-detail{min-height:118px}.panel-controller{width:100%;max-width:none;padding:16px}.panel-stage{height:290px}
+ .catalog-tray-link>a{font-size:14px}
+ .product-toolbar{position:sticky;top:70px;z-index:8;margin-inline:-20px;padding:10px 20px;background:#f7f9fc;border-bottom:1px solid #c5d4e8;display:block;margin-bottom:20px}
+ .filters{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;scrollbar-width:none;padding:3px 0;overscroll-behavior-inline:contain}
+ .filters::-webkit-scrollbar{display:none}.filter{min-height:44px;flex:0 0 auto;font-size:13px;padding:10px 14px}.filter.active{color:#fff}#product-count{display:block;margin-top:4px;font-size:12px}
+ .product-grid{gap:24px 12px;perspective:none}.product-card{transform-style:flat;display:flex;flex-direction:column;min-width:0}
+ .product-image,.product-card:nth-child(-n+2) .product-image{aspect-ratio:1;box-shadow:none;transform:none!important}.product-card:hover .product-image img{transform:none}
+ .product-image img,.product-card:nth-child(-n+2) .product-image img{padding:14px 12px 38px}
+ .inspect-label{font-size:11px;min-height:28px;padding:4px 7px;gap:5px;bottom:8px;inset-inline-end:8px}.inspect-label .ui-icon{width:16px;height:16px}
+ .product-info{display:flex;flex-direction:column;gap:8px;padding:12px 0}.product-info h3,html[lang=en] .product-info h3{font-size:15px;line-height:1.45;min-height:44px}.product-quote{display:none}
+
+ .tray-intro{font-size:14px}.tray-heading h3{font-size:34px}.tray-item{grid-template-columns:52px minmax(0,1fr);gap:12px}.tray-item>img{width:52px;height:60px}.tray-item h4{font-size:15px}.tray-note-label{font-size:12px}.tray-note{font-size:16px;min-height:48px}.tray-quantity{grid-template-columns:44px 54px 44px}.tray-quantity button{min-height:46px}.tray-quantity input{font-size:16px}.tray-remove{min-height:46px;font-size:13px}.tray-item-controls{gap:10px}#tray-clear{min-height:44px;font-size:13px}.tray-summary p{font-size:14px}.tray-summary .button{font-size:14px;min-height:52px}.parts-tray{scroll-margin-top:180px}
+ .about-copy>p:not(.eyebrow),.about-points p{font-size:15px}.about-points h3{font-size:18px}.about-photo>img{height:310px}.profile-link{min-height:74px}
+ .process-grid{grid-template-columns:1fr;gap:0}.process-grid article{min-height:0;padding:22px 0 22px 0;display:grid;grid-template-columns:44px minmax(0,1fr);gap:6px 18px;border-inline:0;border-top:1px solid var(--line);background:none;border-radius:0;transform:none!important}.process-number{grid-row:1/3;font-size:28px}.process-grid h3{margin:0;font-size:20px}.process-grid p{font-size:14px;margin:0}
+ .contact-start{padding:20px;box-shadow:none}.contact-start>p{font-size:15px}.contact-topics legend{font-size:14px}.contact-topic-options button{font-size:13px;min-height:54px}.contact-project{min-height:80px}.contact-places address>p{font-size:13px}.footer-nav a{font-size:14px;min-height:44px}.footer-profile small{font-size:12px}.footer-identity>span{font-size:12px}.footer-bottom>p{font-size:10px}
+ /* Solid bottom sheets keep text and controls clear while the keyboard is open. */
+ #quote-dialog,#product-dialog{position:fixed;inset:auto 0 0;width:100%;max-width:none;max-height:calc(100dvh - 20px);margin:0;border-radius:22px 22px 0 0;border:1px solid #b7cbed;overflow-y:auto;overscroll-behavior:contain;scroll-padding-block:60px 32px;padding:28px 20px calc(24px + env(safe-area-inset-bottom,0px))}
+ #quote-dialog[open],#product-dialog[open]{animation:phone-sheet-in .18s ease-out}
+ dialog::backdrop{backdrop-filter:none!important;background:#102b4b80}
+ .dialog-close,.product-dialog-close{width:44px;height:44px;min-width:44px;min-height:44px;top:12px;inset-inline-end:12px;z-index:10}
+ .dialog-intro{padding-top:18px}.dialog-intro .eyebrow{display:none}.dialog-intro h2{font-size:30px;max-width:calc(100% - 30px);line-height:1.3}.dialog-intro p{font-size:14px}
+ #quote-form label{font-size:14px}#quote-form input,#quote-form textarea,#quote-form select{font-size:16px;min-height:50px;padding:12px;scroll-margin-block:70px}#quote-details{min-height:125px}
+ .form-row{gap:18px}.form-note{font-size:13px}.quote-send-actions{grid-template-columns:1fr;gap:12px}.quote-send-actions .button{min-height:54px;font-size:15px}.quote-parts{font-size:14px;max-height:190px;overflow-y:auto}.quote-application{font-size:14px}
+ #product-dialog{padding:0 0 env(safe-area-inset-bottom,0px)}#product-dialog[open]{display:block}.inspection-image{height:310px;min-height:0;padding:42px 22px 58px}.inspection-image>img{height:210px}.inspection-tools{bottom:12px}.inspection-tools button{min-width:44px;min-height:44px}.inspection-copy{padding:22px 20px 28px}.inspection-copy h2{font-size:28px;margin-top:8px}.inspection-copy>p{font-size:15px;margin-top:12px}.inspection-copy .inspection-note{font-size:13px}.inspection-copy>.button{min-height:52px;font-size:14px;margin-top:16px}
+ .mobile-dock:not([hidden]){position:fixed;bottom:0;inset-inline:0;z-index:18;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:8px max(12px,env(safe-area-inset-left,0px)) calc(8px + env(safe-area-inset-bottom,0px));background:#f9fbff;border-top:1px solid #bacde7;box-shadow:0 -3px 15px #17375c09}
+ .mobile-dock>a,.mobile-dock>button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:56px;border:0;background:none;border-radius:10px;color:#456180;font-size:11px;line-height:1.3;text-align:center;padding:7px 3px}
+ .mobile-dock .ui-icon{width:21px;height:21px}.mobile-dock a[aria-current]{color:#174ee8;background:#e7efff}.mobile-dock>.dock-quote{color:#fff;background:#174ee8}
+ .dock-tray-icon{position:relative;display:flex}.dock-count{position:absolute;top:-6px;inset-inline-end:-17px;font:600 9px/1 Manrope,sans-serif;min-width:18px;padding:3px;background:#e3ecff;color:#1748b2;border:1px solid #c0d0ed;border-radius:7px}.dock-count[data-empty]{display:none}
+ body:has(dialog[open]) .mobile-dock,body:has(.menu-toggle[aria-expanded=true]) .mobile-dock,body.mobile-editing .mobile-dock{display:none}
+ .tray-status{bottom:calc(88px + env(safe-area-inset-bottom,0px));inset-inline:16px;max-width:none;padding:13px 16px;font-size:13px}
+ .mobile-dock :focus-visible{outline-offset:-2px}
+ @keyframes phone-sheet-in{from{opacity:.6;transform:translateY(20px)}to{opacity:1;transform:none}}
+}
+@media(max-width:360px){
+ .lab-hero.hero .hero-actions{gap:12px}.lab-hero.hero .hero-actions .button{gap:10px;padding-inline:10px}.lab-hero.hero .hero-content .text-link{font-size:12px}
+ .climate-number output{font-size:42px}.climate-number{min-width:64px}.hero .climate-control{gap:8px}.climate-presets button{padding-inline:5px}.climate-presets button small{font-size:10px}
+ .service-gallery .service-tab-copy strong,.service-gallery .solution-tab[aria-selected=true] .service-tab-copy strong,html[lang=en] .service-tab-copy strong{font-size:13px}
+ .product-info h3,html[lang=en] .product-info h3{font-size:14px}.product-add{font-size:12px;padding-inline:8px}.tray-item-controls{grid-column:1/-1}.tray-note-label{font-size:11px}.mobile-dock>a,.mobile-dock>button{font-size:10px}
+}
+@media(max-width:640px) and (prefers-reduced-motion:reduce){#quote-dialog[open],#product-dialog[open],.mobile-menu:not([hidden]){animation:none}}

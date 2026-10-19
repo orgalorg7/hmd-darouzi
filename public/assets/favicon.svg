@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>HMD Darouzi</title>
+  <rect width="64" height="64" rx="14" fill="#f5f9ff"/>
+  <path d="M14 10h10v18c3-4 7-6 12-6 10 0 15 6 15 17v13H41V39c0-6-2-9-7-9-6 0-10 4-10 10v12H14Z" fill="#1767ad"/>
+  <path d="M7 53c15-7 31-12 50-14" fill="none" stroke="#f6c83c" stroke-width="5" stroke-linecap="round"/>
+</svg>

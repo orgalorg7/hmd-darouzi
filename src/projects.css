@@ -1,0 +1,79 @@
+/* Our work: four case cards on a solid navy band. Large real photographs, plain type, one action per card. */
+.projects{background:#0a1f3c;color:#e9f0fb}
+.projects-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,400px);align-items:end;gap:14px 48px;margin-bottom:clamp(36px,4.5vw,64px)}
+.projects-head .eyebrow{grid-column:1/-1;margin:0;color:#8fb2ea;letter-spacing:.08em}
+.projects-head h2{margin:0;color:#fff;font-size:clamp(36px,4.6vw,64px);line-height:1.1}
+.projects-head>p:last-child{margin:0;color:#a9bcd8;font-size:16px;line-height:1.75}
+
+.cases{display:grid;gap:clamp(20px,2.4vw,32px)}
+.case{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);overflow:hidden;background:#0f2a4e;border:1px solid #ffffff14;border-radius:6px}
+.case:nth-child(even){grid-template-columns:minmax(0,1fr) minmax(0,1.45fr)}
+.case:nth-child(even) .case-media{order:2}
+.case-media{display:flex;flex-direction:column;min-width:0;background:#061428}
+.case-open{position:relative;display:block;flex:1;width:100%;min-height:0;aspect-ratio:16/11;padding:0;border:0;background:none;cursor:zoom-in}
+.case-image{display:block;width:100%;height:100%;object-fit:cover;transition:opacity .25s ease}
+.case.is-changing .case-image{opacity:.2}
+.case-zoom{position:absolute;top:14px;inset-inline-end:14px;display:grid;place-items:center;width:40px;height:40px;border:1px solid #ffffff38;border-radius:4px;background:#0a1f3c;color:#fff;opacity:0;transition:opacity .15s}
+.case-open:hover .case-zoom,.case-open:focus-visible .case-zoom{opacity:1}
+.case-open:focus-visible{outline:2px solid #8fb2ea;outline-offset:-4px}
+.case-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:12px 16px;border-top:1px solid #ffffff14}
+.case-thumbs{display:flex;gap:6px;margin:0;padding:0;list-style:none}
+.case-thumb{display:block;width:56px;height:44px;padding:0;overflow:hidden;border:0;border-radius:3px;background:#0f2a4e;opacity:.5;outline:1px solid #ffffff24;cursor:pointer;transition:opacity .15s}
+.case-thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.case-thumb:hover{opacity:.85}
+.case-thumb[aria-pressed=true]{opacity:1;outline:2px solid #fff;outline-offset:1px}
+.case-thumb:focus-visible{outline:2px solid #8fb2ea;outline-offset:2px}
+.case-caption{display:flex;flex:1 1 180px;align-items:baseline;justify-content:space-between;gap:12px;min-width:0;margin:0;color:#b9c9e1;font-size:14px}
+.case-count{flex:0 0 auto;color:#7f98bd;font:600 12px/1 Manrope,Arial,sans-serif;letter-spacing:.06em}
+.case-count b{color:#fff}
+
+.case-body{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-width:0;padding:clamp(26px,3.4vw,56px)}
+.case-no{margin:0 0 18px;color:#7fa3e0;font:600 14px/1 Manrope,Arial,sans-serif;letter-spacing:.08em}
+.case-body h3{margin:0 0 14px;color:#fff;font-size:clamp(26px,2.8vw,40px);line-height:1.15}
+.case-text{max-width:440px;margin:0 0 26px;color:#b9c9e1;font-size:16px;line-height:1.75}
+.case-spec{display:flex;align-items:baseline;gap:10px;width:100%;margin:0 0 28px;padding-top:16px;border-top:1px solid #ffffff1f;color:#8ea6c9;font-size:13px}
+.case-spec b{color:#fff;font:600 28px/1 Manrope,Arial,sans-serif;letter-spacing:-.02em}
+.case-spec>span:last-child:not(:first-child){color:#fff;font-size:16px;font-weight:600}
+.case-cta{margin-top:4px}
+
+.projects-source{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin:clamp(28px,3.4vw,44px) 0 0;color:#a9bcd8;font-size:14px}
+.projects-source a{display:inline-flex;align-items:center;gap:8px;min-height:44px;color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:5px;text-decoration-color:#ffffff59}
+.projects-source a:hover{text-decoration-color:#fff}
+.projects-source a:focus-visible{outline:2px solid #8fb2ea;outline-offset:3px}
+
+/* Full-size viewer shared by all eleven photographs. */
+#project-viewer{width:min(1180px,calc(100vw - 32px));max-width:none;max-height:calc(100dvh - 32px);padding:0;overflow:hidden;border:1px solid #ffffff2e;border-radius:6px;background:#0a1f3c;color:#fff;box-shadow:none}
+#project-viewer::backdrop{background:#030b17ed}
+.viewer-figure{display:grid;grid-template-rows:minmax(0,1fr) auto;height:min(84dvh,880px);margin:0}
+#viewer-image{display:block;width:100%;height:100%;min-height:0;object-fit:contain;background:#061428;touch-action:pinch-zoom}
+.viewer-figure figcaption{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 20px;border-top:1px solid #ffffff1f;color:#dce6f5;font-size:15px}
+#project-viewer .project-count{color:#7f98bd;font:600 13px/1 Manrope,Arial,sans-serif;letter-spacing:.06em}
+#project-viewer .project-count b{color:#fff}
+.viewer-close,.viewer-nav{position:absolute;z-index:2;display:grid;place-items:center;width:48px;height:48px;padding:0;border:1px solid #ffffff40;border-radius:4px;background:#0a1f3c;color:#fff;transition:background .15s}
+.viewer-close{top:14px;inset-inline-end:14px}
+.viewer-nav{top:calc(50% - 50px)}
+.viewer-prev{inset-inline-start:14px}.viewer-next{inset-inline-end:14px}
+.viewer-close:hover,.viewer-nav:hover{background:#174ee8;border-color:#174ee8}
+.viewer-close:focus-visible,.viewer-nav:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.icon-back{transform:scaleX(-1)}[dir=rtl] .icon-back{transform:none}
+
+@media(hover:none){.case-zoom{opacity:1}}
+@media(max-width:900px){
+ .projects-head{grid-template-columns:1fr}
+ .case,.case:nth-child(even){grid-template-columns:1fr}
+ .case:nth-child(even) .case-media{order:0}
+ .case-open{aspect-ratio:4/3}
+}
+@media(max-width:640px){
+ .case-bar{padding:10px 12px}
+ .case-caption{flex-basis:100%;font-size:13px}
+ .case-body{padding:22px 18px 24px}
+ .case-no{margin-bottom:14px}
+ .case-text{font-size:15px;margin-bottom:20px}
+ .case-spec b{font-size:24px}
+ #project-viewer{width:100vw;max-height:100dvh;height:100dvh;border:0;border-radius:0}
+ .viewer-figure{height:100dvh}
+ .viewer-figure figcaption{padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));font-size:14px}
+ .viewer-nav{top:auto;bottom:calc(74px + env(safe-area-inset-bottom,0px))}
+}
+@media(prefers-reduced-motion:reduce){.case-image,.case-zoom,.case-thumb,.viewer-close,.viewer-nav{transition:none}}

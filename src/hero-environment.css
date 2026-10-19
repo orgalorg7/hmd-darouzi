@@ -1,0 +1,23 @@
+/* Static cooling-fin artwork. No animation, tracking or runtime effects. */
+.hero.lab-hero,.hero.lab-hero[data-climate]{--env-depth:#80afe7;--env-mid:#d4e6fa;--env-paper:#f4f8ff;--env-fin:#729edc;--env-edge:#9cbae0;background:#f4f8ff;border-bottom-color:#c2d5ee;background-image:none;transition:none}
+.hero-environment{position:absolute;inset:0 auto 0 0;width:70%;overflow:hidden;pointer-events:none;z-index:0;mask-image:linear-gradient(to right,#000 0%,#000 62%,transparent 100%)}
+.environment-art{position:absolute;inset:-3%;width:106%;height:106%}
+.hero .room-stage{z-index:1}
+.hero .room-stage::after{display:none}
+.hero .scene-topline{color:#24466c}
+.hero .model-caption{color:#3f5c7b;border-color:#88a9d2}
+.hero .scene-bottomline .drag-hint{color:#36577c}
+.hero .view-switch,.hero .climate-control{z-index:6}
+.hero .scene-actions button{background:#f9fbfff2}
+.hero .climate-presets{background:#e7effc}
+.hero .hero-description{max-width:350px}
+@media(max-width:900px){
+ .hero-environment{top:320px;width:100%;mask-image:linear-gradient(to bottom,transparent,#000 16%,#000 72%,transparent)}
+ .environment-art{height:110%;top:-7%}
+ .hero.configuring .hero-environment{top:350px}
+}
+@media(max-width:640px){
+ .hero-environment{top:325px;bottom:90px;mask-image:linear-gradient(to bottom,transparent,#000 12%,#000 70%,transparent)}
+ .environment-art{width:130%;left:-18%;height:130%;top:-20%}
+ .hero.configuring .hero-environment{top:355px}
+}

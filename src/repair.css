@@ -1,0 +1,48 @@
+/* Maintenance request: native checkboxes and radios shown as large tiles; one WhatsApp action. */
+.repair{background:#eef3fb;border-block:1px solid #d3dff0}
+.repair-layout{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(32px,5vw,80px);align-items:start}
+.repair-intro{position:sticky;top:110px}
+.repair-intro .eyebrow{color:#174ee8}
+.repair-intro h2{margin:0 0 16px;color:#112b49;font-size:clamp(34px,4vw,56px);line-height:1.12}
+.repair-intro>p:not(.eyebrow){max-width:440px;margin:0 0 28px;color:#465f79;font-size:16px;line-height:1.8}
+.repair-call{display:inline-flex;align-items:center;gap:14px;min-height:64px;padding:12px 20px 12px 14px;border:1px solid #c5d4e8;border-radius:12px;background:#fff;color:#112b49;text-decoration:none;transition:border-color .15s}
+.repair-call>.ui-icon{width:40px;height:40px;padding:9px;border-radius:50%;background:#e7efff;color:#174ee8}
+.repair-call span{display:grid;gap:2px}
+.repair-call small{color:#465f79;font-size:12px}
+.repair-call strong{font:600 18px/1.2 Manrope,Arial,sans-serif;letter-spacing:-.01em}
+.repair-call:hover{border-color:#174ee8}
+.repair-call:focus-visible{outline:3px solid #174ee8;outline-offset:3px}
+
+.repair-form{gap:22px;padding:clamp(22px,3vw,40px);border:1px solid #c5d4e8;border-radius:14px;background:#fff}
+.repair-group{margin:0;padding:0;border:0;min-width:0}
+.repair-group legend{margin-bottom:12px;padding:0;color:#112b49;font-size:15px;font-weight:600}
+.repair-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.repair-option,.repair-urgent{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:50px;padding:10px 14px;border:1px solid #c5d4e8;border-radius:10px;background:#f9fbfe;color:#1a3554;font-size:14px;line-height:1.4;cursor:pointer;transition:border-color .15s,background .15s}
+.repair-form .repair-option input,.repair-form .repair-urgent input{position:absolute;inset:0;width:100%;height:100%;margin:0;padding:0;opacity:0;cursor:pointer}
+.repair-tick{flex:0 0 auto;width:18px;height:18px;color:#174ee8;opacity:0;transition:opacity .15s}
+.repair-option:hover,.repair-urgent:hover{border-color:#7ea3ed}
+.repair-option:has(input:checked){border-color:#174ee8;background:#e7efff;color:#0f2f6b;font-weight:600}
+.repair-option:has(input:checked) .repair-tick{opacity:1}
+.repair-option:has(input:focus-visible),.repair-urgent:has(input:focus-visible){outline:3px solid #174ee8;outline-offset:2px}
+.repair-urgent{justify-content:flex-start;font-weight:600}
+.repair-urgent:has(input:checked){border-color:#d9a400;background:#fff7d6;color:#5c4300}
+.repair-box{display:grid;place-items:center;flex:0 0 auto;width:22px;height:22px;border:2px solid #9fb2cc;border-radius:5px;background:#fff}
+.repair-box .ui-icon{width:15px;height:15px;stroke-width:3;opacity:0}
+.repair-urgent:has(input:checked) .repair-box{border-color:#d9a400;background:#f7cf48;color:#5c4300}
+.repair-urgent:has(input:checked) .repair-box .ui-icon{opacity:1}
+.repair-error{margin:10px 0 0;color:#b42318;font-size:13px;font-weight:600}
+.repair-form label>span{color:#1a3554;font-size:13px;font-weight:600}
+.repair-form input:not([type=checkbox]):not([type=radio]),.repair-form textarea{border-color:#c5d4e8;border-radius:10px;background:#f9fbfe;font-size:15px}
+.repair-form input:not([type=checkbox]):not([type=radio]):focus,.repair-form textarea:focus{outline:2px solid #174ee8;outline-offset:1px;border-color:#174ee8}
+.repair-send{width:100%;background:#0a7d55;border-color:#0a7d55;color:#fff;font-size:15px;text-align:start;white-space:normal}
+.repair-send:hover{background:#086a48;border-color:#086a48}
+.repair-note{margin:-8px 0 0;color:#465f79;font-size:12px;text-align:center}
+
+@media(max-width:900px){.repair-layout{grid-template-columns:1fr}.repair-intro{position:static}}
+@media(max-width:640px){
+ .repair-options{grid-template-columns:1fr}
+ .repair-form{padding:18px 14px;border-radius:12px}
+ .repair-form input:not([type=checkbox]):not([type=radio]),.repair-form textarea{font-size:16px}
+ .repair-call{width:100%}
+}
+@media(prefers-reduced-motion:reduce){.repair-option,.repair-urgent,.repair-tick,.repair-call{transition:none}}
