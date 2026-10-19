@@ -72,19 +72,19 @@
  .cooling-question{display:block}.cooling-question h3{font-size:26px}.cooling-question p{font-size:14px;margin-top:8px}
  .cooling-choices{display:grid;grid-template-columns:1fr;gap:8px}.cooling-choices button{font-size:15px;padding:12px 16px;min-height:54px;gap:14px;text-align:start}.cooling-choices .ui-icon{width:24px;height:24px}
  #cooling-summary{font-size:14px}#cooling-links button,#cooling-reset{font-size:13px;min-height:44px}#cooling-inquiry{width:100%;min-height:48px;font-size:14px}
- /* All six fields stay discoverable; selecting one never resizes its neighbours. */
- .solution-tabs.service-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));height:auto;width:100%;gap:10px;padding:0;overflow:visible;scroll-snap-type:none}
- .service-gallery .solution-tab,.service-gallery .solution-tab[aria-selected=true]{height:154px;min-width:0;flex:none;transition:border-color .15s,background .15s;box-shadow:none;border-radius:12px}
- .service-gallery .solution-tab::before,.service-gallery .solution-tab[aria-selected=true]::before{display:none}
- .service-gallery .service-thumb,.service-gallery .solution-tab[data-service][aria-selected=true] .service-thumb{inset:9px 10px 56px;padding:4px;overflow:hidden;border-radius:7px}
- .service-gallery .service-thumb img,.service-gallery .solution-tab[data-service][aria-selected=true] .service-thumb img{width:100%;height:100%;object-fit:contain;filter:none;transform:none;mix-blend-mode:multiply;transition:none}
- .service-gallery .solution-tab[data-service=cold] .service-thumb img,.service-gallery .solution-tab[data-service=towers] .service-thumb img{object-fit:cover;mix-blend-mode:normal}
- .service-tab-copy{left:12px;right:12px;bottom:11px;min-height:38px;justify-content:center}
- .service-gallery .service-tab-copy strong,.service-gallery .solution-tab[aria-selected=true] .service-tab-copy strong,html[lang=en] .service-tab-copy strong{font-size:14px;line-height:1.35}
- .service-gallery .service-tab-copy small{display:none!important}.service-tab-arrow{top:10px;inset-inline-end:10px;width:26px;height:26px}.service-tab-arrow .ui-icon{width:15px;height:15px}
+ /* Same expanding gallery as desktop: the selected field opens wide, the rest stay narrow in a swipeable strip. */
+ .solution-tabs.service-gallery{display:flex;height:300px;gap:10px;padding:0;padding-inline-end:20px;margin-inline-end:-20px;overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;scroll-snap-type:none;scrollbar-width:none}
+ .solution-tabs.service-gallery::-webkit-scrollbar{display:none}
+ .service-gallery .solution-tab{flex:0 0 112px;min-width:0;border-radius:12px;transition:flex-basis .5s var(--ease-out),background .3s,border-color .3s}
+ .service-gallery .solution-tab[aria-selected=true]{flex:0 0 min(72vw,290px)}
+ .service-gallery .solution-tab:not([aria-selected=true]) .service-thumb{padding:34px 8px 72px}
+ .service-gallery .solution-tab[data-service] .service-thumb img{transition:none}
+ .service-tab-copy{left:12px;right:12px;bottom:14px}
+ .service-gallery .service-tab-copy strong,html[lang=en] .service-tab-copy strong{font-size:14px;line-height:1.35}.service-gallery .solution-tab[aria-selected=true] .service-tab-copy strong{font-size:20px}
+ .service-tab-arrow{top:10px;inset-inline-end:10px;width:26px;height:26px}.service-tab-arrow .ui-icon{width:15px;height:15px}
  .solution-copy{padding-top:24px;gap:18px}.solution-copy h3,html[lang=en] .solution-copy h3{font-size:29px}.solution-copy>p{font-size:15px;line-height:1.85}.service-specs{gap:25px}.service-specs small{font-size:12px}.service-specs strong{font-size:20px}.solution-copy>.button{width:100%;min-height:50px;justify-content:space-between;font-size:14px}
  .installation{padding-top:8px}.installation-detail h3{font-size:30px}.installation-parts button{font-size:13px;min-height:66px}.installation-detail #installation-description{font-size:15px}.installation-detail #installation-spec-note{font-size:13px}.installation-detail{min-height:0}.installation-actions{gap:12px;margin-top:24px}.installation-actions .button{width:100%;font-size:14px;min-height:50px}.installation-actions .text-link,.installation-tray-link{font-size:13px;min-height:44px}.installation-photo-footer{font-size:12px;gap:12px}.installation-source{display:flex;align-items:center;min-height:44px}
- .insulation-intro,.layer-detail p{font-size:14px}.panel-control-label,.panel-control-ends{font-size:12px}.panel-disclaimer{font-size:12px;max-width:35ch}.layer-tabs button{min-height:52px}.layer-detail{min-height:118px}.panel-controller{width:100%;max-width:none;padding:16px}.panel-stage{height:290px}
+ .insulation-intro,.layer-detail p{font-size:14px}.panel-control-label,.panel-control-ends{font-size:12px}.panel-disclaimer{font-size:12px;max-width:35ch}.layer-tabs button{min-height:52px}.layer-detail{min-height:118px}.panel-controller{width:100%;max-width:none;padding:16px}.panel-stage{height:380px}
  .catalog-tray-link>a{font-size:14px}
  .product-toolbar{position:sticky;top:70px;z-index:8;margin-inline:-20px;padding:10px 20px;background:#f7f9fc;border-bottom:1px solid #c5d4e8;display:block;margin-bottom:20px}
  .filters{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;scrollbar-width:none;padding:3px 0;overscroll-behavior-inline:contain}
@@ -120,7 +120,7 @@
 @media(max-width:360px){
  .lab-hero.hero .hero-actions{gap:12px}.lab-hero.hero .hero-actions .button{gap:10px;padding-inline:10px}.lab-hero.hero .hero-content .text-link{font-size:12px}
  .climate-number output{font-size:42px}.climate-number{min-width:64px}.hero .climate-control{gap:8px}.climate-presets button{padding-inline:5px}.climate-presets button small{font-size:10px}
- .service-gallery .service-tab-copy strong,.service-gallery .solution-tab[aria-selected=true] .service-tab-copy strong,html[lang=en] .service-tab-copy strong{font-size:13px}
+ .service-gallery .service-tab-copy strong,html[lang=en] .service-tab-copy strong{font-size:13px}.service-gallery .solution-tab[aria-selected=true] .service-tab-copy strong{font-size:18px}
  .product-info h3,html[lang=en] .product-info h3{font-size:14px}.product-add{font-size:12px;padding-inline:8px}.tray-item-controls{grid-column:1/-1}.tray-note-label{font-size:11px}.mobile-dock>a,.mobile-dock>button{font-size:10px}
 }
 @media(max-width:640px) and (prefers-reduced-motion:reduce){#quote-dialog[open],#product-dialog[open],.mobile-menu:not([hidden]){animation:none}}

@@ -104,8 +104,17 @@ window.addEventListener('popstate',()=>setLanguage(location.pathname.startsWith(
 $('#solution-tabs').addEventListener('click', event => {
   const tab = event.target.closest('[data-service]');
   if (!tab) return;
-  activeService = tab.dataset.service;renderService();$(`#tab-${activeService}`).focus({preventScroll:true});
+  activeService = tab.dataset.service;renderService();$(`#tab-${activeService}`).focus({preventScroll:true});revealTab(tab);
 });
+// On phones the selected card widens inside a swipeable strip; bring it fully into view once it has grown.
+function revealTab(tab) {
+  const strip = $('#solution-tabs');
+  if (strip.scrollWidth <= strip.clientWidth) return;
+  const reveal = () => tab.scrollIntoView({block:'nearest',inline:'nearest',behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});
+  if (!parseFloat(getComputedStyle(tab).transitionDuration)) return reveal();
+  const done = event => {if (event.target !== tab || event.propertyName !== 'flex-basis') return;tab.removeEventListener('transitionend', done);reveal();};
+  tab.addEventListener('transitionend', done);
+}
 $('#solution-tabs').addEventListener('keydown', event => {
   if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
   event.preventDefault();

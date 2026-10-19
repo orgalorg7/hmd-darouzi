@@ -39,7 +39,7 @@ try{
    await page.locator('#solutions').evaluate(e=>scrollTo({top:e.offsetTop-80,behavior:'instant'}));await expect(page.locator('#mobile-dock')).toBeVisible();
    await page.locator('[data-cooling=food]').tap();await expect(page.locator('#cooling-result')).toBeVisible();
    const before=await page.locator('#solution-tabs').boundingBox();await page.locator('#tab-transport').tap();const after=await page.locator('#solution-tabs').boundingBox();expect(after.height).toBe(before.height);
-   expect(await page.locator('#solution-tabs').evaluate(e=>e.scrollWidth<=e.clientWidth)).toBe(true);
+   await expect.poll(()=>page.evaluate(()=>{const strip=document.querySelector('#solution-tabs').getBoundingClientRect(),tab=document.querySelector('#tab-transport').getBoundingClientRect();return tab.left>=strip.left-1&&tab.right<=strip.right+1&&tab.width>2*document.querySelector('#tab-cold').getBoundingClientRect().width;})).toBe(true);
    await page.locator('#mobile-dock [href="#products"]').tap();await expect(page.locator('#products-title')).toBeFocused();
    await page.locator('[data-filter=insulation]').tap();await expect(page.locator('.product-card')).toHaveCount(3);await page.locator('[data-add-part=hardware]').tap();
    await page.locator('#mobile-dock [href="#parts-tray"]').tap();await expect(page.locator('#tray-dialog-title')).toBeFocused();await expect(page.locator('[data-tray-item=hardware]')).toBeVisible();
@@ -63,5 +63,5 @@ try{
  await page.locator('#render-quality').tap();await expect(page.locator('#scene-host')).toHaveAttribute('data-scene','ready',{timeout:20000});await page.locator('#render-quality').tap();await expect(page.locator('#scene-host canvas')).toHaveCount(0);
  await page.setViewportSize({width:844,height:390});await expect(page.locator('#mobile-dock')).toBeHidden();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  expect(errors).toEqual([]);
- console.log('PASS: phone touch flow at 4× CPU slowdown, direct WhatsApp chat above the dock, saved lightweight preview, 320–430px bilingual layouts, stable solution grid, large controls, dock navigation/focus, keyboard-aware visibility, full-width sheets, readable form inputs, product/tray/blueprint interactions, both message handoffs, accessibility, no 3D download in light mode and 3D switching.');
+ console.log('PASS: phone touch flow at 4× CPU slowdown, direct WhatsApp chat above the dock, saved lightweight preview, 320–430px bilingual layouts, desktop-style expanding solution strip, large controls, dock navigation/focus, keyboard-aware visibility, full-width sheets, readable form inputs, product/tray/blueprint interactions, both message handoffs, accessibility, no 3D download in light mode and 3D switching.');
 }finally{await browser.close();}
