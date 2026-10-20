@@ -4,6 +4,8 @@ const browser=await chromium.launch({channel:'chrome',args:['--no-sandbox']});
 const base=process.env.TEST_URL||'http://localhost:4173';
 try{
  const context=await browser.newContext({viewport:{width:1440,height:1000},reducedMotion:'reduce'});
+ // The parts list ships switched off; this suite keeps it covered for when it returns.
+ await context.addInitScript(()=>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.dataset.partsTray='on';}));
  const page=await context.newPage(),errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  await page.goto(base);await page.locator('#language').click();
@@ -18,7 +20,7 @@ try{
  await page.locator('#installation-add').click();await expect(page.locator('#tray-count')).toHaveText('01');
  await expect(page.locator('#tray-status')).toContainText('Cooling evaporators');
  await page.locator('#installation').screenshot({path:'test-results/installation-desktop-en.png'});
- await page.locator('[data-add-part=compressor]').click();await page.locator('[data-add-part=compressor]').click();
+ for(let i=0;i<2;i++){await page.locator('[data-product=compressor]').click();await page.locator('#inspect-add').click();}
  await expect(page.locator('#tray-count')).toHaveText('03');await expect(page.locator('#tray-quantity-compressor')).toHaveValue('2');
  await page.locator('#tray-note-compressor').fill('Model A & B <sample> "requested"');
  await page.locator('#tray-quantity-compressor').fill('5');await page.locator('#tray-quantity-compressor').press('Tab');await expect(page.locator('#tray-count')).toHaveText('06');

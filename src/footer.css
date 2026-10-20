@@ -64,6 +64,7 @@ html[lang=ar] .contact-end h2{line-height:1.28;letter-spacing:-.035em}
 .contact-place-icon .ui-icon{width:29px;height:29px;stroke-width:1.4}
 .contact-addresses strong{font-size:14px;font-weight:600;line-height:1.6;color:#163e73}
 .contact-addresses p{font-size:13px;line-height:1.9;color:#48627f;margin-top:5px;text-wrap:pretty}
+.contact-addresses .branch-label{font-weight:600;color:#174ee8}
 .contact-channel-link{display:grid;justify-items:start;position:relative;gap:0;padding:24px 28px;background:#e1eee9;border:1px solid #c7ddd3;border-radius:8px;color:#194d3d;text-decoration:none;transition:background .2s,border-color .2s}
 .contact-follow-label{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:500;color:#346650}
 .contact-follow-label .ui-icon{width:22px;height:22px;color:#0a7d55}

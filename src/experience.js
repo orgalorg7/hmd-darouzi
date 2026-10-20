@@ -1,39 +1,54 @@
 import {createBlueprint} from './blueprint.js';
 import {icon} from './icons.js';
 import {isLite,setQuality,constrainedHardware} from './performance.js';
+import {clampDoor,maxDoors,nextDoor,separateDoor,wallNames,walls} from './doors.js';
 import previewPoints from './room-previews.json';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-let scene,doorOpen=true,mode='cutaway',zoom=1,activeProduct=null;
+let scene,doors=[{wall:'front',offset:-.7}],mode='cutaway',zoom=1,activeProduct=null;
 let loadingPromise,loadVersion=0;
-let previewKey="cutaway-open",requestedPreview=previewKey;
+let previewKey="cutaway-closed",requestedPreview=previewKey;
 const language=()=>document.documentElement.lang;
-const words={ar:{chill:'تبريد',freeze:'تجميد',deep:'تجميد عميق',closeDoor:'أغلق الباب',openDoor:'افتح الباب',cooling:['AIRFLOW','قلب الغرفة.','توزّع المبخرات الهواء البارد داخل الغرفة. يختار الفريق سعتها وتوزيعها بحسب المنتج والمساحة.'],panels:['INSULATION','البرودة تبدأ من العزل.','ألواح ساندويش بانل تساعد على الحد من انتقال الحرارة. تحدد السماكة والمواد حسب متطلبات المشروع.'],door:['ACCESS','كل تفصيل يحفظ البرودة.','تتوفر أبواب مفصلية أو انزلاقية بأبعاد حسب الطلب. جرّب فتح الباب لرؤية حركة الدخول.'],loading:'جاري تفعيل الغرفة التفاعلية…',drag:'اسحب لتدوير الغرفة',fallback:'معاينة ثابتة. يمكنك تخصيص الأبعاد والحرارة أدناه.'},en:{chill:'Chilled',freeze:'Frozen',deep:'Deep freeze',closeDoor:'Close door',openDoor:'Open door',cooling:['AIRFLOW','The heart of the room.','Evaporators circulate cold air throughout the room. Our team specifies capacity and placement for your product and space.'],panels:['INSULATION','Cold starts with insulation.','Sandwich panels help limit heat transfer. Panel thickness and materials are specified for your project.'],door:['ACCESS','Every detail protects the cold.','Hinged and sliding doors are available in custom sizes. Open the door to explore access to the room.'],loading:'Activating the interactive room…',drag:'Drag to rotate the room',fallback:'Static preview. Dimensions and temperature can still be configured below.'}};
-Object.assign(words.ar,{lite:'معاينة خفيفة',enable3d:'تفعيل 3D',enableLite:'عرض خفيف',liteBuilder:'حدد الأبعاد والحرارة لإضافتها إلى طلبك. الصورة تعرض نموذجاً بمقاسات افتراضية.',fullBuilder:'غيّر الأبعاد وشاهد الغرفة تتشكّل. نراجع التصميم والمواصفات معك قبل التنفيذ.'});
-Object.assign(words.en,{lite:'Lightweight preview',enable3d:'Enable 3D',enableLite:'Light view',liteBuilder:'Set dimensions and temperature for your inquiry. The preview shows a room with standard dimensions.',fullBuilder:'Change the dimensions and watch the room take shape. Our team reviews the design and specifications before production.'});
+const words={ar:{chill:'تبريد',freeze:'تجميد',deep:'تجميد عميق',doorName:'باب',removeDoor:'احذف',doorWall:'جدار',cooling:['AIRFLOW','قلب الغرفة.','توزّع المبخرات الهواء البارد داخل الغرفة. يختار الفريق سعتها وتوزيعها بحسب المنتج والمساحة.'],panels:['INSULATION','البرودة تبدأ من العزل.','ألواح ساندويش بانل تساعد على الحد من انتقال الحرارة. تحدد السماكة والمواد حسب متطلبات المشروع.'],door:['ACCESS','كل تفصيل يحفظ البرودة.','تتوفر أبواب مفصلية أو انزلاقية بأبعاد حسب الطلب. أضف حتى أربعة أبواب واسحب كل باب إلى الجدار والموضع المناسب.'],loading:'جاري تفعيل الغرفة التفاعلية…',drag:'اسحب لتدوير الغرفة أو لتحريك الباب',fallback:'معاينة ثابتة. يمكنك تخصيص الأبعاد والحرارة أدناه.'},en:{chill:'Chilled',freeze:'Frozen',deep:'Deep freeze',doorName:'Door',removeDoor:'Remove',doorWall:'Wall of',cooling:['AIRFLOW','The heart of the room.','Evaporators circulate cold air throughout the room. Our team specifies capacity and placement for your product and space.'],panels:['INSULATION','Cold starts with insulation.','Sandwich panels help limit heat transfer. Panel thickness and materials are specified for your project.'],door:['ACCESS','Every detail protects the cold.','Hinged and sliding doors are available in custom sizes. Add up to four doors and drag each one to the right wall and position.'],loading:'Activating the interactive room…',drag:'Drag to rotate the room or move a door',fallback:'Static preview. Dimensions and temperature can still be configured below.'}};
+Object.assign(words.ar,{lite:'معاينة ثابتة',liteBuilder:'حدد الأبعاد والحرارة لإضافتها إلى طلبك. الصورة تعرض نموذجاً بمقاسات افتراضية.',fullBuilder:'غيّر الأبعاد وشاهد الغرفة تتشكّل. نراجع التصميم والمواصفات معك قبل التنفيذ.'});
+Object.assign(words.en,{lite:'Still preview',liteBuilder:'Set dimensions and temperature for your inquiry. The preview shows a room with standard dimensions.',fullBuilder:'Change the dimensions and watch the room take shape. Our team reviews the design and specifications before production.'});
 Object.assign(words.ar,{blueprint:'مخطط الغرفة',blueprintHint:'اختر أحد المكوّنات',blueprintBuilder:'غيّر الأبعاد لتحديث المخطط. هذا تصور للطلب تتم مراجعته قبل التنفيذ.'});
 Object.assign(words.en,{blueprint:'Room blueprint',blueprintHint:'Select a component',blueprintBuilder:'Change the dimensions to update the plan. Our team reviews the concept before production.'});
 const w=()=>words[language()];
 const blueprint=createBlueprint($('#room-stage'),(key,button)=>activeHotspot===key?closeHotspot():openHotspot(key,button));
-function updateBlueprint(){blueprint.update({width:Number($('#room-width').value),length:Number($('#room-length').value),door:doorOpen,lang:language()});}
+const dimensions=()=>({width:Number($('#room-width').value),length:Number($('#room-length').value),height:Number($('#room-height').value)});
+function updateBlueprint(){blueprint.update({...dimensions(),doors,lang:language()});}
 function releaseScene(){loadVersion++;scene?.dispose();scene=null;loadingPromise=null;$('#room-stage').classList.remove('scene-ready','scene-loading');}
 
 function updateTemperature(value){
   value=Number(value);const display=`${value>0?'+':value<0?'−':''}${Math.abs(value)}`;
   $('#hero-temperature').textContent=`${display}°`;$('#temperature').value=value;$('#temperature-value').value=`${value>0?'+':''}${value}°C`;
   $('#climate-name').textContent=value<-25?w().deep:value<0?w().freeze:w().chill;
-  $$('#room-stage, .lab-hero').forEach(el=>{el.dataset.climate=value<-25?'deep':value<0?'frozen':'chilled';});
-  $$('.climate-presets [data-climate]').forEach(b=>{const active=Number(b.dataset.climate)===value;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
+  const range=value<-25?'deep':value<0?'frozen':'chilled';$$('#room-stage, .lab-hero').forEach(el=>{el.dataset.climate=range;});
+  // A preset stays highlighted while the temperature is anywhere in its range: chilled 0…+10, frozen 0…−25, deep below −25.
+  $$('.climate-presets [data-climate]').forEach(b=>{const active=b.dataset.range===range;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});
   scene?.setTemperature(value);
   window.dispatchEvent(new CustomEvent('darouzi:temperature',{detail:{value}}));
 }
-function updateDoorLabel(){
- $('#door-toggle span').textContent=doorOpen?w().closeDoor:w().openDoor;
- $('#door-toggle use').setAttribute('href',`/assets/interface-icons.svg#${doorOpen?'door':'door-enter'}`);
+// The door list mirrors the model: each row names a door, lets its wall change, and removes extra doors.
+function renderDoors(){
+ const lang=language(),names=wallNames[lang]||wallNames.ar;
+ $('#door-list').innerHTML=doors.map((door,i)=>`<li><span>${w().doorName} ${i+1}</span><select data-door="${i}" aria-label="${w().doorWall} ${w().doorName} ${i+1}">${walls.map(wall=>`<option value="${wall}"${wall===door.wall?' selected':''}>${names[wall]}</option>`).join('')}</select><button type="button" class="door-remove" data-remove-door="${i}" aria-label="${w().removeDoor} ${w().doorName} ${i+1}"${doors.length<2?' disabled':''}>${icon('x')}</button></li>`).join('');
+ $$('#add-door,#builder-add-door').forEach(button=>button.disabled=doors.length>=maxDoors);
 }
-function updateDimensions(){const width=Number($('#room-width').value),length=Number($('#room-length').value);$('#width-output').value=`${width} m`;$('#length-output').value=`${length} m`;$('#room-volume').innerHTML=`${(width*length*2.8).toFixed(1).replace(/\.0$/,'')} <small>m³</small>`;scene?.setDimensions(width,length);updateBlueprint();}
+function setDoors(next){const {width,length}=dimensions();doors=next.map(door=>clampDoor(door,width,length));doors=doors.map((_,i)=>separateDoor(doors,i,width,length));scene?.setDoors(doors);renderDoors();updateBlueprint();}
+$$('#add-door,#builder-add-door').forEach(button=>button.addEventListener('click',()=>{if(doors.length<maxDoors)setDoors([...doors,nextDoor(doors)]);}));
+$('#door-list').addEventListener('change',event=>{const i=Number(event.target.dataset.door);if(event.target.matches('select'))setDoors(doors.map((door,j)=>j===i?{wall:event.target.value,offset:0}:door));});
+$('#door-list').addEventListener('click',event=>{const button=event.target.closest('[data-remove-door]');if(button&&doors.length>1){setDoors(doors.filter((_,j)=>j!==Number(button.dataset.removeDoor)));$('#builder-add-door').focus({preventScroll:true});}});
+// Typed values (for example 3.8 m) and the sliders stay in step; out-of-range entries snap to the nearest limit.
+function updateDimensions(){const {width,length,height}=dimensions();for(const key of ['width','length','height']){const input=$(`#room-${key}-input`);if(document.activeElement!==input)input.value=$(`#room-${key}`).value;}scene?.setDimensions(width,length,height);setDoors(doors);}
+for(const key of ['width','length','height']){
+ const range=$(`#room-${key}`),input=$(`#room-${key}-input`);
+ range.addEventListener('input',updateDimensions);
+ input.addEventListener('input',()=>{const value=Number(input.value);if(input.value!==''&&value>=Number(input.min)&&value<=Number(input.max)){range.value=Math.round(value*10)/10;updateDimensions();}});
+ input.addEventListener('change',()=>{const value=Math.round(Math.max(Number(input.min),Math.min(Number(input.max),Number(input.value)||Number(range.value)))*10)/10;range.value=value;input.value=value;updateDimensions();});
+}
 $$('.climate-presets [data-climate]').forEach(b=>b.addEventListener('click',()=>updateTemperature(b.dataset.climate)));
 $('#temperature').addEventListener('input',e=>updateTemperature(e.target.value));
-$('#room-width').addEventListener('input',updateDimensions);$('#room-length').addEventListener('input',updateDimensions);
 $$('.view-switch [data-view]').forEach(button=>button.addEventListener('click',()=>{
  closeHotspot();mode=button.dataset.view;
  $$('.view-switch [data-view]').forEach(el=>{el.classList.toggle('active',el===button);el.setAttribute('aria-pressed',String(el===button));});
@@ -43,7 +58,6 @@ $$('.view-switch [data-view]').forEach(button=>button.addEventListener('click',(
  $$('#rotate-left,#rotate-right,#reset-view').forEach(el=>el.disabled=isLite()||mode==='blueprint');
  qualityLabels();
 }));
-$('#door-toggle').addEventListener('click',()=>{doorOpen=!doorOpen;scene?.setDoor(doorOpen);updateDoorLabel();$('#door-toggle').setAttribute('aria-pressed',String(doorOpen));if(mode==='blueprint')updateBlueprint();else if(isLite())updatePreview();});
 $('#rotate-left').addEventListener('click',()=>ensureScene().then(()=>scene?.rotate(1)));$('#rotate-right').addEventListener('click',()=>ensureScene().then(()=>scene?.rotate(-1)));
 $('#reset-view').addEventListener('click',()=>ensureScene().then(()=>scene?.reset()));
 let activeHotspot=null,activeHotspotTrigger=null;
@@ -52,7 +66,7 @@ function openHotspot(key,trigger){activeHotspot=key;if(trigger)activeHotspotTrig
 $$('[data-hotspot]').forEach(b=>b.addEventListener('click',()=>activeHotspot===b.dataset.hotspot?closeHotspot():openHotspot(b.dataset.hotspot,b)));
 $('#close-component').addEventListener('click',closeHotspot);
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeHotspot();});
-const languageObserver=new MutationObserver(()=>{$('.builder-close')?.setAttribute('aria-label',language()==='ar'?'إغلاق الإعدادات':'Close configurator');if($('#room-stage').classList.contains('scene-unavailable'))$('.drag-hint').textContent=w().fallback;updateTemperature($('#temperature').value);updateDoorLabel();updateBlueprint();if(activeHotspot)openHotspot(activeHotspot);});languageObserver.observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+const languageObserver=new MutationObserver(()=>{$('.builder-close')?.setAttribute('aria-label',language()==='ar'?'إغلاق الإعدادات':'Close configurator');if($('#room-stage').classList.contains('scene-unavailable'))$('.drag-hint').textContent=w().fallback;updateTemperature($('#temperature').value);renderDoors();updateBlueprint();if(activeHotspot)openHotspot(activeHotspot);});languageObserver.observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
 function positionPreviewHotspots(){
  if(scene||mode==='blueprint')return;
  const host=$('#scene-host'),scale=Math.min(host.clientWidth/936,host.clientHeight/735),x=(host.clientWidth-936*scale)/2,y=(host.clientHeight-735*scale)/2;
@@ -61,16 +75,12 @@ function positionPreviewHotspots(){
 const previewObserver=new ResizeObserver(positionPreviewHotspots);previewObserver.observe($('#scene-host'));
 function updatePreview(){
  if(mode==='blueprint')return;
- const key=`${mode}-${doorOpen?'open':'closed'}`;requestedPreview=key;
+ const key=`${mode}-closed`;requestedPreview=key;
  if(key===previewKey){positionPreviewHotspots();return;}
  const src=key==='cutaway-open'?'/assets/room-preview.webp':`/assets/room-${key}.webp`;
  const next=new Image();next.decoding='async';next.onload=()=>{if(requestedPreview!==key||scene)return;$('.scene-fallback').src=src;previewKey=key;positionPreviewHotspots();};next.src=src;
 }
 function qualityLabels(){
- const qualityButton=$('#render-quality');qualityButton.hidden=mode==='blueprint';
- qualityButton.innerHTML=`${icon(isLite()?'box':'bolt')}<span>${isLite()?w().enable3d:w().enableLite}</span>`;
- qualityButton.dataset.mode=isLite()?'lite':'full';
- qualityButton.title=language()==='ar'?(isLite()?'تفعيل التدوير والعرض ثلاثي الأبعاد':'عرض أخف باستهلاك أقل للمعالج'):(isLite()?'Enable live 3D and rotation':'Use a lighter preview with less processing');
  $('.drag-hint').textContent=mode==='blueprint'?w().blueprintHint:isLite()?w().lite:loadingPromise&&!scene?w().loading:w().drag;
  $('[data-i="builderDesc"]').textContent=mode==='blueprint'?w().blueprintBuilder:isLite()?w().liteBuilder:w().fullBuilder;
 }
@@ -82,14 +92,13 @@ function applyQuality(){
 }
 window.addEventListener('darouzi:quality',applyQuality);
 new MutationObserver(qualityLabels).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
-$('#render-quality').addEventListener('click',()=>{const next=isLite()?'full':'lite';setQuality(next);if(next==='full')ensureScene();});
-applyQuality();updateBlueprint();
+applyQuality();renderDoors();updateBlueprint();
 async function loadScene(version){
  try{
   const {createColdRoom}=await import('./room-scene.js');if(version!==loadVersion||isLite()||mode==='blueprint')return;
-  scene=createColdRoom($('#scene-host'),{constrained:constrainedHardware(),onUnavailable:()=>setQuality('lite',false)});
-  $('#room-stage').classList.add('scene-ready');scene.setMode(mode);scene.setDoor(doorOpen);updateDimensions();updateTemperature($('#temperature').value);scene.finishSetup();qualityLabels();
- }catch(error){if(version!==loadVersion)return;console.warn('Live 3D unavailable; lightweight controls remain available.',error);setQuality('lite',false);}
+  scene=createColdRoom($('#scene-host'),{constrained:constrainedHardware(),onUnavailable:()=>setQuality('lite'),onDoorsChange:next=>{doors=next;renderDoors();updateBlueprint();}});
+  $('#room-stage').classList.add('scene-ready');scene.setMode(mode);updateDimensions();updateTemperature($('#temperature').value);scene.finishSetup();qualityLabels();
+ }catch(error){if(version!==loadVersion)return;console.warn('Live 3D unavailable; a still preview and all controls remain available.',error);setQuality('lite');}
 }
 // Live 3D is the default: the engine loads once the room approaches the viewport.
 function ensureScene(){

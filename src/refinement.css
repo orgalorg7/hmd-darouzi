@@ -222,6 +222,8 @@ body{background:var(--bg);color:var(--text)}
 .lang-button:hover{background:#e7efff;color:var(--accent)}
 .button{border-radius:10px;background:var(--accent);border-color:var(--accent);min-height:54px;padding:9px 12px 9px 22px;gap:24px;font-weight:600;box-shadow:0 4px 0 #123cba,0 9px 20px #174ee815;isolation:isolate}
 html[dir=rtl] .button{padding:9px 22px 9px 12px}
+/* The uneven padding leaves room for a trailing arrow; text-only buttons stay centred. */
+html[dir] .button:not(:has(.ui-icon)){padding-inline:20px;justify-content:center}
 .button::before{content:'';position:absolute;inset:0;z-index:-1;background:#103dc5;transform:translateY(102%);transition:transform .35s var(--ease-out)}
 .button:hover{background:var(--accent);border-color:var(--accent);box-shadow:0 4px 0 #123cba,0 12px 24px #174ee829;transform:translateY(-2px)}
 .button:hover::before{transform:translateY(0)}
@@ -254,7 +256,7 @@ html[lang=en] .lab-hero.hero h1 .accent{margin-inline-start:0}
 .scene-actions button{border-radius:8px;min-height:40px;border-color:#adc4e3;background:#ffffffcf;color:#244b7b;box-shadow:0 2px 0 #a8bfdd40}
 .scene-actions button:hover:not(:disabled){background:#174ee8;color:#fff;border-color:#174ee8;transform:translateY(-2px)}
 .scene-actions button:active:not(:disabled){transform:translateY(1px)}
-#door-toggle[aria-pressed=true]{border-color:#6189d5;background:#edf3ff;color:#204ea1}
+#add-door[aria-pressed=true]{border-color:#6189d5;background:#edf3ff;color:#204ea1}
 .view-switch{border:1px solid #b8cdeb;border-radius:12px;background:#f9fbff;box-shadow:0 6px 22px #1c4fa316;padding:5px;overflow:hidden;backdrop-filter:none}
 .view-switch button{position:relative;z-index:1;border-radius:8px;min-height:43px;color:#32567d;padding-inline:23px;font-weight:600}
 .view-switch button.active{background:#174ee8;box-shadow:none;color:#fff}

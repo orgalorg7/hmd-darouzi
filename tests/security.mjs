@@ -19,6 +19,8 @@ expect(text).toMatch(/^Contact: mailto:h\.darouzi@gmail\.com$/m);expect(expires.
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox','--enable-unsafe-swiftshader']});
 try{
  const context=await browser.newContext({viewport:{width:1440,height:1000}});
+ // The parts list ships switched off; this suite keeps it covered for when it returns.
+ await context.addInitScript(()=>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.dataset.partsTray='on';}));
  // Any blocked request, inline code or rejected feature is a failure, not a silent degradation.
  await context.addInitScript(()=>{window.violations=[];document.addEventListener('securitypolicyviolation',e=>window.violations.push(`${e.violatedDirective} ${e.blockedURI}`));});
  const page=await context.newPage(),errors=[],warnings=[];
@@ -26,11 +28,11 @@ try{
  const home=await page.goto(base+'/');const headers=home.headers();
  expect(headers['content-security-policy']).toBe(sitePolicy);expect(headers['x-frame-options']).toBe('DENY');expect(headers['cross-origin-opener-policy']).toBe('same-origin');expect(headers['cross-origin-resource-policy']).toBe('same-origin');expect(headers['permissions-policy']).toContain('camera=()');
  // Exercise every lazily loaded module under the policy: 3D engine, inspection, quote, tray and footer canvas.
- if(await page.locator('html').getAttribute('data-performance')==='lite')await page.locator('#render-quality').click();else await page.locator('#scene-host').click({position:{x:80,y:80}});
+ await page.locator('#scene-host').click({position:{x:80,y:80}});
  await expect(page.locator('#scene-host')).toHaveAttribute('data-scene','ready',{timeout:15000});await expect(page.locator('#scene-host canvas')).toHaveCount(1);
  for(const view of ['exploded','exterior','blueprint','cutaway'])await page.locator(`[data-view=${view}]`).click();
  await page.locator('.inspect-trigger').first().click();await page.locator('#zoom-in').click();await page.keyboard.press('Escape');
- await page.locator('[data-add-part=compressor]').click();await page.locator('.site-header .quote-trigger').click();await expect(page.locator('#quote-dialog')).toBeVisible();await page.keyboard.press('Escape');
+ await page.locator('[data-product=compressor]').click();await page.locator('#inspect-add').click();await page.locator('.site-header .quote-trigger').click();await expect(page.locator('#quote-dialog')).toBeVisible();await page.keyboard.press('Escape');
  await page.locator('#contact').scrollIntoViewIfNeeded();const field=await page.locator('.contact-field').boundingBox();
  await expect.poll(async()=>{await page.mouse.move(field.x+field.width*.3,field.y+40);await page.mouse.move(field.x+field.width*.6,field.y+80,{steps:4});return page.locator('.contact-field canvas').count();},{timeout:8000}).toBe(1);
  await page.locator('#language').click();await expect(page.locator('html')).toHaveAttribute('lang','en');

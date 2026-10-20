@@ -8,7 +8,7 @@ import {icon} from './icons.js';
 import './performance.js';
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
-const arabic = {partsTray:'استفسار عن قطع',application:'الاستخدام',inspect:'افحص المنتج',configuration:'تكوين الغرفة',height:'الارتفاع',volume:'الحجم التقريبي',copied:'تم نسخ الرسالة',copyFailed:'حدد النص أدناه وانسخه.',serviceOption:'اختر المجال أو المنتج',count:'منتجات',productCategory:'منتجات المفرق',target:'درجة الحرارة المستهدفة',name:'الاسم',phoneText:'الهاتف',details:'التفاصيل',subject:'طلب عرض سعر',general:'استفسار عام'};
+const arabic = {partsTray:'استفسار عن قطع',application:'الاستخدام',inspect:'افحص المنتج',configuration:'تكوين الغرفة',height:'الارتفاع',volume:'الحجم التقريبي',doors:'الأبواب',storedProduct:'المادة المخزنة',copied:'تم نسخ الرسالة',copyFailed:'حدد النص أدناه وانسخه.',serviceOption:'اختر المجال أو المنتج',count:'منتجات',productCategory:'منتجات المفرق',target:'درجة الحرارة المستهدفة',name:'الاسم',phoneText:'الهاتف',details:'التفاصيل',subject:'طلب عرض سعر',general:'استفسار عام'};
 // Build-time English pages carry the original Arabic labels for instant switching.
 Object.assign(arabic,JSON.parse(document.querySelector('#arabic-copy')?.textContent||'{}'));
 // Preserve the Arabic HTML as the source of truth; English mirrors every visible interface label.
@@ -58,7 +58,7 @@ function renderProducts() {
     let card = productNodes.get(key);
     if (!card) {
       const template = document.createElement('template');
-      template.innerHTML = `<article class="product-card"><div class="product-media"><button class="product-image inspect-trigger" data-product="${item.id}" aria-label="${t('inspect')}: ${local(item)}"><img src="/assets/${item.image}.webp" srcset="/assets/${item.image}-small.webp 300w, /assets/${item.image}.webp 650w" sizes="(max-width:640px) calc((100vw - 54px)/2), ${index<2?'(min-width:1440px) 658px, calc((100vw - 100px)/2)':'(min-width:1440px) 430px, calc((100vw - 120px)/3)'}" alt="${local(item)}" width="400" height="330" loading="lazy" decoding="async" /><span class="inspect-label">${t('inspect')} ${icon('zoom-in')}</span></button><button type="button" class="product-add" data-add-part="${item.id}" aria-label="${t('addToTray')}: ${local(item)}">${icon('plus')}<span class="screen-reader">${t('addToTray')}</span></button></div><div class="product-info"><div><small>${t('productCategory')}</small><h3>${local(item)}</h3></div><button class="product-quote quote-trigger" data-selection="product-${item.id}" aria-label="${t('quote')}: ${local(item)}">${icon('arrow-right','icon-forward')}</button></div></article>`;
+      template.innerHTML = `<article class="product-card"><div class="product-media"><button class="product-image inspect-trigger" data-product="${item.id}" aria-label="${t('inspect')}: ${local(item)}"><img src="/assets/${item.image}.webp" srcset="/assets/${item.image}-small.webp 300w, /assets/${item.image}.webp 650w" sizes="(max-width:640px) calc((100vw - 54px)/2), ${index<2?'(min-width:1440px) 658px, calc((100vw - 100px)/2)':'(min-width:1440px) 430px, calc((100vw - 120px)/3)'}" alt="${local(item)}" width="400" height="330" loading="lazy" decoding="async" /></button></div><div class="product-info"><div><small>${t('productCategory')}</small><h3>${local(item)}</h3></div><button class="product-quote quote-trigger" data-selection="product-${item.id}" aria-label="${t('quote')}: ${local(item)}">${icon('arrow-right','icon-forward')}</button></div></article>`;
       card = template.content.firstElementChild;
       productNodes.set(key, card);
     } else card.style.animation = 'none';
@@ -156,7 +156,12 @@ function openQuote(selection='',details) {
   dialog.showModal();document.body.classList.add('no-scroll');setMenu(false);
 }
 document.addEventListener('click',event=>{const trigger=event.target.closest('.quote-trigger');if(trigger)openQuote(trigger.dataset.selection||'');});
-$('#temperature-quote').addEventListener('click',()=>openQuote('cold',`${t('configuration')}\n${t('widthLabel')}: ${$('#room-width').value} m\n${t('lengthLabel')}: ${$('#room-length').value} m\n${t('height')}: 2.8 m\n${t('volume')}: ${(Number($('#room-width').value)*Number($('#room-length').value)*2.8).toFixed(1)} m³\n${t('target')}: ${$('#temperature-value').value}`));
+// The quote carries the full configuration: typed dimensions, every door and its wall, and the stored product.
+$('#temperature-quote').addEventListener('click',()=>{
+  const [width,length,height]=['width','length','height'].map(key=>Number($(`#room-${key}`).value)),product=$('#room-product').value.trim();
+  const doors=$$('#door-list select').map(select=>select.selectedOptions[0].textContent);
+  openQuote('cold',[t('configuration'),`${t('widthLabel')}: ${width} m`,`${t('lengthLabel')}: ${length} m`,`${t('height')}: ${height} m`,`${t('volume')}: ${(width*length*height).toFixed(1)} m³`,`${t('doors')}: ${doors.length} (${doors.join(lang==='ar'?'، ':', ')})`,...(product?[`${t('storedProduct')}: ${product}`]:[]),`${t('target')}: ${$('#temperature-value').value}`].join('\n'));
+});
 $('.dialog-close').addEventListener('click',()=>dialog.close());
 dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
 dialog.addEventListener('close',()=>{if(!phoneExperience?.afterQuote())lastFocus?.focus({preventScroll:true});document.body.classList.toggle('no-scroll',!!document.querySelector('dialog[open]'));});

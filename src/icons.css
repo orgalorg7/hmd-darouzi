@@ -12,8 +12,8 @@
 .action-icon .ui-icon{width:20px;height:20px}
 .text-link>.ui-icon{width:18px;height:18px}
 .scene-actions button,.inspection-tools button,.dialog-close,.product-dialog-close,.builder-active .builder-close,#close-component,.product-quote{display:inline-flex;align-items:center;justify-content:center}
-#door-toggle{gap:6px}
-#door-toggle .ui-icon{width:17px;height:17px}
+#add-door{gap:6px}
+#add-door .ui-icon{width:17px;height:17px}
 .scene-actions .ui-icon,.inspection-tools .ui-icon{width:20px;height:20px}
 .view-switch button{display:inline-flex;align-items:center;justify-content:center;gap:7px}
 .view-switch .ui-icon{width:18px;height:18px}
@@ -57,7 +57,7 @@
  .view-switch .ui-icon{width:16px;height:16px}
  .scene-actions button{padding-inline:7px}
  .scene-actions .ui-icon{width:18px;height:18px}
- #door-toggle .ui-icon{width:15px;height:15px}
+ #add-door .ui-icon{width:15px;height:15px}
  .inspect-label .ui-icon{width:16px;height:16px}
  .contact-details>a>strong{gap:10px}
  .contact-details>a>strong .ui-icon{width:19px;height:19px}

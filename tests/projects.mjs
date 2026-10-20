@@ -14,8 +14,8 @@ try{
  await cold.scrollIntoViewIfNeeded();
  // A card's thumbnails switch only that card's photograph, caption and count.
  await cold.locator('.case-thumb').nth(3).click();await expect(cold.locator('.case-thumb').nth(3)).toHaveAttribute('aria-pressed','true');await expect(cold.locator('.case-thumb').nth(0)).toHaveAttribute('aria-pressed','false');
- await expect(cold.locator('.case-index')).toHaveText('4');await expect(cold.locator('.case-caption-text')).toHaveText('مبخرات داخل غرفة التبريد');
- await expect(cold.locator('.case-image')).toHaveAttribute('src',/cold-store-4800-evaporators\.webp$/);await expect(cold.locator('.case-image')).toHaveAttribute('alt','مبخرات داخل غرفة التبريد');
+ await expect(cold.locator('.case-index')).toHaveText('4');await expect(cold.locator('.case-caption-text')).toHaveText('درجات حرارة مدروسة لجميع أماكن المشروع');
+ await expect(cold.locator('.case-image')).toHaveAttribute('src',/cold-store-4800-evaporators\.webp$/);await expect(cold.locator('.case-image')).toHaveAttribute('alt','درجات حرارة مدروسة لجميع أماكن المشروع');
  await expect(cold).not.toHaveClass(/is-changing/);await expect(cases.nth(3).locator('.case-index')).toHaveText('1');
  // The viewer opens at the photograph a card shows and browses all eleven in page order.
  const viewer=page.locator('#project-viewer'),index=page.locator('#viewer-index');
@@ -27,7 +27,7 @@ try{
  await page.keyboard.press('ArrowLeft');await expect(index).toHaveText('05');
  await page.keyboard.press('ArrowRight');await page.keyboard.press('ArrowRight');await expect(index).toHaveText('03');
  for(let i=0;i<3;i++)await page.locator('.viewer-prev').click();await expect(index).toHaveText('11');
- await page.locator('.viewer-next').click();await expect(index).toHaveText('01');await expect(page.locator('#viewer-caption')).toHaveText('ممر التخزين في البراد');
+ await page.locator('.viewer-next').click();await expect(index).toHaveText('01');await expect(page.locator('#viewer-caption')).toHaveText('مستودع التبريد');
  await page.keyboard.press('Escape');await expect(viewer).toBeHidden();await expect(cold.locator('.case-open')).toBeFocused();await expect.poll(()=>noScroll(page)).toBe(false);
  // Single-photograph cards open at their own place; the backdrop closes and focus returns.
  const towers=cases.nth(2).locator('.case-open');await towers.click();await expect(index).toHaveText('07');await expect(page.locator('#viewer-caption')).toHaveText('أبراج تبريد بشعار HMD');
@@ -37,14 +37,14 @@ try{
  await scan(page,'#projects');
  // Captions follow the language switch without losing each card's selection.
  await page.locator('#language').click();await expect(page.locator('html')).toHaveAttribute('lang','en');
- await expect(cold.locator('.case-caption-text')).toHaveText('Evaporators inside a cold room');await expect(cold.locator('.case-index')).toHaveText('4');
+ await expect(cold.locator('.case-caption-text')).toHaveText('Temperatures planned for every area of the project');await expect(cold.locator('.case-index')).toHaveText('4');
  await expect(cases.nth(1).locator('h3')).toHaveText('Water chillers');
  await cases.nth(1).locator('.case-open').click();await expect(page.locator('#viewer-caption')).toHaveText('Water chillers installed on a roof');
  await page.keyboard.press('ArrowRight');await expect(index).toHaveText('07');await page.keyboard.press('Escape');
  await scan(page,'#projects');
  // A direct English visit shows English captions before any interaction.
  const english=await desktop.newPage();await english.goto(base+'/en/');const first=english.locator('.case').first();
- await expect(first.locator('.case-caption-text')).toHaveText('Storage corridor in the cold store');await expect(first.locator('.case-image')).toHaveAttribute('alt','Storage corridor in the cold store');await english.close();
+ await expect(first.locator('.case-caption-text')).toHaveText('Cold store');await expect(first.locator('.case-image')).toHaveAttribute('alt','Cold store');await english.close();
  for(const width of [1100,900,768]){await page.setViewportSize({width,height:900});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);}
  expect(errors).toEqual([]);await desktop.close();
 

@@ -2,7 +2,7 @@ import {chromium,expect} from '@playwright/test';
 const browser=await chromium.launch({channel:'chrome',headless:true,args:['--no-sandbox']});
 try{
  const context=await browser.newContext({viewport:{width:390,height:844}});
- await context.addInitScript(()=>{Object.defineProperty(navigator,'hardwareConcurrency',{get:()=>8});Object.defineProperty(navigator,'deviceMemory',{get:()=>8});localStorage.setItem('darouzi-quality','full');});
+ await context.addInitScript(()=>{Object.defineProperty(navigator,'hardwareConcurrency',{get:()=>8});Object.defineProperty(navigator,'deviceMemory',{get:()=>8});});
  const page=await context.newPage();await page.goto(process.env.TEST_URL||'http://localhost:4173');
  await expect(page.locator('.lab-hero')).toHaveClass(/motion-visible/);
  await expect(page.locator('#airflow, .airflow-control, .airflow-light')).toHaveCount(0);
@@ -24,10 +24,10 @@ try{
  await page.locator('#language').click();expect(parseFloat(await page.locator('#temperature').evaluate(el=>el.style.getPropertyValue('--range-fill')))).toBe(80);
  await page.setViewportSize({width:390,height:844});await page.evaluate(()=>scrollTo(0,0));await page.waitForTimeout(500);
  const actions=await page.locator('.hero-actions').boundingBox(),topline=await page.locator('.scene-topline').boundingBox();expect(topline.y).toBeGreaterThan(actions.y+actions.height);
- await page.locator('.menu-toggle').click();await expect(page.locator('#mobile-menu')).toBeVisible();await page.setViewportSize({width:1440,height:1000});await expect(page.locator('#mobile-menu')).toBeHidden();await page.setViewportSize({width:390,height:844});await page.locator('.menu-toggle').click();await page.locator('#hero-temperature').click();await expect(page.locator('#mobile-menu')).toBeHidden();
+ await page.locator('.menu-toggle').click();await expect(page.locator('#mobile-menu')).toBeVisible();await page.setViewportSize({width:1440,height:1000});await expect(page.locator('#mobile-menu')).toBeHidden();await page.setViewportSize({width:390,height:844});await page.locator('.menu-toggle').click();{const menu=await page.locator('#mobile-menu').boundingBox();await page.mouse.click(195,Math.min(830,menu.y+menu.height+30));}await expect(page.locator('#mobile-menu')).toBeHidden();
  await page.setViewportSize({width:1440,height:1000});await page.locator('.inspect-trigger').first().click();await expect(page.locator('#product-dialog')).toBeVisible();await page.mouse.click(8,8);await expect(page.locator('#product-dialog')).toBeHidden();await expect(page.locator('.inspect-trigger').first()).toBeFocused();
  await page.locator('#contact').scrollIntoViewIfNeeded();await expect(page.locator('.lab-hero')).not.toHaveClass(/motion-visible/);
- await page.evaluate(()=>scrollTo(0,0));await expect(page.locator('.lab-hero')).toHaveClass(/motion-visible/);await page.locator('#render-quality').click();await expect(page.locator('.lab-hero')).not.toHaveClass(/motion-visible/);
+ await page.evaluate(()=>scrollTo(0,0));await expect(page.locator('.lab-hero')).toHaveClass(/motion-visible/);await page.waitForFunction(()=>document.querySelector('#scene-host')?.dataset.scene==='ready',null,{timeout:30000});await page.locator('#scene-host canvas').evaluate(canvas=>canvas.getContext('webgl2').getExtension('WEBGL_lose_context').loseContext());await expect(page.locator('html')).toHaveAttribute('data-performance','lite');await expect(page.locator('.lab-hero')).not.toHaveClass(/motion-visible/);
  expect(await page.locator('.hero-environment').evaluate(el=>el.getAnimations({subtree:true}).length)).toBe(0);
  expect(await page.locator('.environment-art').evaluate(el=>getComputedStyle(el).transform)).toBe('none');
  await page.setViewportSize({width:390,height:844});await page.screenshot({path:'test-results/vivid-mobile-lite.png'});

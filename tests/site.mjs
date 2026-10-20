@@ -8,6 +8,13 @@ const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors
 await mkdir('test-results',{recursive:true});
 try {
  await page.goto(base);await page.evaluate(()=>document.fonts.ready);
+ // The parts list is switched off: no section, catalog link, add buttons or phone dock entry.
+ // Header order: solutions, retail products, our work, catalog (company profile PDF), about HMD, contact.
+ expect(await page.locator('.desktop-nav a').allTextContents()).toEqual(['مجالات الشركة','منتجات المفرق','أعمالنا','الكتالوج','عن HMD','تواصل معنا']);await expect(page.locator('.desktop-nav [data-i=navCatalog]')).toHaveAttribute('href','/hmd-darouzi-profile.pdf');
+ await expect(page.locator('html')).toHaveAttribute('data-parts-tray','off');
+ for(const selector of ['#parts-tray','.catalog-tray-link','#installation-add'])await expect(page.locator(selector)).toBeHidden();
+ await page.locator('.inspect-trigger').first().click();await expect(page.locator('#product-dialog')).toBeVisible();await expect(page.locator('#inspect-add')).toBeHidden();await page.keyboard.press('Escape');
+ {const phone=await browser.newPage({viewport:{width:390,height:844},isMobile:true,hasTouch:true});await phone.goto(base);await phone.locator('#products').evaluate(e=>scrollTo({top:e.offsetTop,behavior:'instant'}));await expect(phone.locator('#mobile-dock')).toBeVisible();await expect(phone.locator('#mobile-dock a[href="#parts-tray"]')).toBeHidden();const items=await phone.locator('#mobile-dock > :visible').evaluateAll(els=>els.map(e=>Math.round(e.getBoundingClientRect().width)));expect(items.length).toBe(3);expect(Math.max(...items)-Math.min(...items)).toBeLessThan(3);await phone.close();}
  await expect(page.locator('h1')).toContainText('هندسة البرودة');
  for(const id of ['cold','chillers','towers','ice','transport','insulation']){
   await page.locator(`#tab-${id}`).click();await expect(page.locator(`#tab-${id}`)).toHaveAttribute('aria-selected','true');

@@ -4,7 +4,10 @@ const browser=await chromium.launch({channel:'chrome',args:['--no-sandbox','--en
 const base=process.env.TEST_URL||'http://localhost:4173';
 try{
  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:1});
- await context.addInitScript(()=>{if(!sessionStorage.getItem('seeded')){sessionStorage.setItem('seeded','1');localStorage.setItem('darouzi-quality','lite');}});
+ // The parts list ships switched off; this suite keeps it covered for when it returns.
+ await context.addInitScript(()=>document.addEventListener('DOMContentLoaded',()=>{document.documentElement.dataset.partsTray='on';}));
+ // Without WebGL the still preview takes over; swipes there switch views instead of rotating.
+ await context.addInitScript(()=>{const get=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /webgl/i.test(type)?null:get.call(this,type,...args);};});
  const page=await context.newPage(),errors=[],engine=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(/room-scene.*\.js/.test(r.url()))engine.push(r.url());});
  const cdp=await context.newCDPSession(page);await cdp.send('Emulation.setCPUThrottlingRate',{rate:4});
  await page.goto(base);await page.locator('#language').tap();await page.locator('#room-expand').tap();await expect(page.locator('#room-workspace')).toBeVisible();
@@ -17,8 +20,8 @@ try{
   await page.waitForTimeout(600);
  }
  let box=await page.locator('#scene-host').boundingBox();await swipe(box.x+box.width*.8,box.y+box.height*.5,box.x+box.width*.2,box.y+box.height*.5);
- await expect(page.locator('[data-view=exterior]')).toHaveAttribute('aria-pressed','true');await expect(page.locator('.scene-fallback')).toHaveAttribute('src',/exterior-open/);
- await page.locator('#door-toggle').tap();await expect(page.locator('.scene-fallback')).toHaveAttribute('src',/exterior-closed/);
+ await expect(page.locator('[data-view=exterior]')).toHaveAttribute('aria-pressed','true');await expect(page.locator('.scene-fallback')).toHaveAttribute('src',/exterior-closed/);
+ await page.locator('#add-door').tap();await expect(page.locator('#door-list li')).toHaveCount(2);
  await page.locator('[data-view=blueprint]').tap();await page.locator('[data-blueprint-part=panels]').tap();await expect(page.locator('#component-note')).toBeVisible();await page.locator('#close-component').tap();
  for(const width of [320,390,430]){
   await page.setViewportSize({width,height:640});
@@ -36,7 +39,7 @@ try{
  await query.fill('not a listed component');await expect(page.locator('#catalog-empty')).toBeVisible();await page.locator('#catalog-reset').tap();await expect(page.locator('.product-card')).toHaveCount(8);await expect(query).toHaveValue('');
  await query.fill('compressor');await page.locator('[data-filter=insulation]').tap();await expect(page.locator('#catalog-empty')).toBeVisible();await page.locator('#catalog-reset').tap();
  await query.fill('door');await page.locator('#language').tap();await expect(query).toHaveValue('door');await expect(page.locator('.product-card')).toHaveCount(2);await page.locator('#catalog-search-clear').tap();
- await query.fill('compressor');await page.locator('[data-add-part=compressor]').tap();await expect(page.locator('[data-open-tray]')).toBeVisible();
+ await query.fill('compressor');await page.locator('[data-product=compressor]').tap();await page.locator('#inspect-add').tap();await expect(page.locator('[data-open-tray]')).toBeVisible();
  const scrollBefore=await page.evaluate(()=>scrollY);await page.locator('[data-open-tray]').tap();await expect(page.locator('#tray-dialog')).toBeVisible();await expect(page.locator('#tray-dialog-title')).toBeFocused();await expect(page.locator('#tray-status')).toBeEmpty();
  await page.locator('#tray-note-compressor').fill('Model requested & dimensions');await page.locator('#tray-quantity-compressor').fill('3');await page.locator('#tray-quantity-compressor').press('Tab');
  await page.locator('#tray-submit').tap();await expect(page.locator('#tray-dialog')).not.toBeVisible();await expect(page.locator('#quote-parts')).toContainText('3 ×');await expect(page.locator('#quote-parts')).toContainText('Model requested & dimensions');
@@ -50,6 +53,6 @@ try{
  await page.locator('#mobile-dock [href="#parts-tray"]').tap();await page.locator('[data-tray-action=remove]').tap();await expect(page.locator('#tray-empty')).toBeVisible();await expect(page.locator('#tray-submit')).toBeDisabled();await expect(page.locator('#tray-dialog-title')).toBeFocused();await page.keyboard.press('Escape');
  // A resize restores moved content before leaving the phone layout.
  await page.locator('#mobile-dock [href="#parts-tray"]').tap();await page.setViewportSize({width:1024,height:900});await expect(page.locator('#tray-dialog')).not.toBeVisible();await expect(page.locator('#products #parts-tray')).toHaveCount(1);
- expect(engine).toEqual([]);expect(errors).toEqual([]);
- console.log('PASS: phone fullscreen room, real touch swipes, blueprint/door state, repeated restoration, 320–430px short-screen layouts, Arabic/English search and empty state, drawer editing, quote return, preserved browsing position, grip dismissal, resize cleanup, accessibility and zero 3D requests.');
+ await expect(page.locator('#scene-host canvas')).toHaveCount(0);expect(errors).toEqual([]);
+ console.log('PASS: phone fullscreen room, real touch swipes, blueprint and added doors, repeated restoration, 320–430px short-screen layouts, Arabic/English search and empty state, drawer editing, quote return, preserved browsing position, grip dismissal, resize cleanup, accessibility and a clean still preview when WebGL is unavailable.');
 }finally{await browser.close();}

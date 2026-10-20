@@ -4,16 +4,16 @@ const browser=await chromium.launch({channel:'chrome',args:['--no-sandbox','--en
 const base=process.env.TEST_URL||'http://localhost:4173';
 try{
  const context=await browser.newContext({viewport:{width:1440,height:1000}});
- await context.addInitScript(()=>{localStorage.setItem('darouzi-quality','full');Object.defineProperty(navigator,'hardwareConcurrency',{get:()=>8});Object.defineProperty(navigator,'deviceMemory',{get:()=>8});});
+ await context.addInitScript(()=>{Object.defineProperty(navigator,'hardwareConcurrency',{get:()=>8});Object.defineProperty(navigator,'deviceMemory',{get:()=>8});});
  const page=await context.newPage(),errors=[];
  page.on('pageerror',e=>errors.push(e.message));await page.goto(base);
  await page.locator('[data-view=blueprint]').click();await expect(page.locator('#blueprint-panel')).toBeVisible();await expect(page.locator('.blueprint-size')).toHaveText('5 × 4 m');
- await expect(page.locator('#scene-host canvas')).toHaveCount(0);await expect(page.locator('#render-quality')).toBeHidden();
+ await expect(page.locator('#scene-host canvas')).toHaveCount(0);await expect(page.locator('#render-quality')).toHaveCount(0);
  for(const key of ['cooling','panels','door']){
   await page.locator(`[data-blueprint-part=${key}]`).click();await expect(page.locator('#component-note')).toBeVisible();await expect(page.locator(`[data-blueprint-part=${key}]`)).toHaveAttribute('aria-expanded','true');
   await page.locator('#close-component').click();await expect(page.locator(`[data-blueprint-part=${key}]`)).toBeFocused();
  }
- const door=await page.locator('.bp-door-leaf').getAttribute('d');await page.locator('#door-toggle').click();expect(await page.locator('.bp-door-leaf').getAttribute('d')).not.toBe(door);await expect(page.locator('.bp-door-arc')).toHaveAttribute('visibility','hidden');
+ await expect(page.locator('.bp-doors rect')).toHaveCount(1);await page.locator('#add-door').click();await expect(page.locator('.bp-doors rect')).toHaveCount(2);await page.locator('#door-list select').nth(1).selectOption('back');await expect(page.locator('.bp-doors rect').nth(1)).toHaveAttribute('height','12');await page.locator('[data-remove-door="1"]').click();await expect(page.locator('.bp-doors rect')).toHaveCount(1);await expect(page.locator('[data-remove-door="0"]')).toBeDisabled();
  await page.locator('.hero-actions a[href="#room-builder"]').click();
  for(const [width,length] of [[7,6],[3,3],[5.5,4.5]]){
   await page.locator('#room-width').fill(String(width));await page.locator('#room-length').fill(String(length));
@@ -53,7 +53,7 @@ try{
  await page.setViewportSize({width:1440,height:1000});await page.locator('[data-view=exterior]').click();await expect(page.locator('#scene-host')).toHaveAttribute('data-scene','ready',{timeout:20000});await expect(page.locator('#blueprint-panel')).toBeHidden();await page.locator('[data-view=blueprint]').click();await expect(page.locator('#scene-host canvas')).toHaveCount(0);await expect(page.locator('#blueprint-panel')).toBeVisible();
  expect(errors).toEqual([]);await context.close();
  // A late engine import must not resurrect WebGL behind the blueprint.
- const race=await browser.newPage();await race.addInitScript(()=>localStorage.setItem('darouzi-quality','full'));
+ const race=await browser.newPage();
  await race.route('**/room-scene-*.js',async route=>{await new Promise(resolve=>setTimeout(resolve,500));await route.continue();});
  await race.goto(base);await race.locator('[data-view=exterior]').click();await race.locator('[data-view=blueprint]').click();await race.waitForTimeout(1000);await expect(race.locator('#scene-host canvas')).toHaveCount(0);await expect(race.locator('#blueprint-panel')).toBeVisible();await race.close();
  console.log('PASS: blueprint without a live canvas, live dimensions and door, accessible component details, bilingual responsive layouts, 3D disposal/import race, three application routes, relevant solutions, preserved drafts, WhatsApp/email context and accessibility.');

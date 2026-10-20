@@ -46,7 +46,8 @@ try{
  await expect(page.locator('#contact-project-topic')).toHaveText(await page.locator('[data-inquiry=insulation] span').textContent());
  await page.evaluate(()=>scrollTo({top:0,behavior:'instant'}));await page.waitForTimeout(300);
  const offscreen=await page.evaluate(()=>window.footerPaints);await page.waitForTimeout(400);expect(await page.evaluate(()=>window.footerPaints)).toBe(offscreen);
- await page.locator('#render-quality').click();await expect(page.locator('.contact-field canvas')).toHaveCount(0);
+ // When the GPU is lost and the still preview takes over, the footer animation is removed as well.
+ await page.waitForFunction(()=>document.querySelector('#scene-host')?.dataset.scene==='ready',null,{timeout:30000});await page.locator('#scene-host canvas').evaluate(canvas=>canvas.getContext('webgl2').getExtension('WEBGL_lose_context').loseContext());await expect(page.locator('html')).toHaveAttribute('data-performance','lite');await expect(page.locator('.contact-field canvas')).toHaveCount(0);
  await page.locator('#contact').scrollIntoViewIfNeeded();await page.locator('[data-inquiry=chillers]').click();await page.locator('.contact-project').click();await expect(page.locator('#quote-service')).toHaveValue('chillers');await page.keyboard.press('Escape');
  await page.setViewportSize({width:390,height:844});await page.locator('#contact').screenshot({path:'test-results/footer-interactive-mobile-lite.png'});
  expect(errors).toEqual([]);

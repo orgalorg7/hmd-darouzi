@@ -8,7 +8,7 @@ export const faqMeta={
 };
 export const faqItems={
  ar:[
-  ['من هي شركة درعوزي للتبريد؟','درعوزي للتبريد (HMD Darouzi) شركة تبريد صناعي في حلب، سوريا. نصنّع ونجهّز غرف التبريد والتجميد، شيلرات تبريد المياه، أبراج التبريد، معامل ألواح الثلج، صناديق السيارات المبردة والعزل الحراري بألواح الساندويش بانل، ونبيع قطع التبريد بالمفرق. مكتب المبيعات في الجميلية والمنشأة الصناعية في المدينة الصناعية بالشيخ نجار.'],
+  ['من هي شركة درعوزي للتبريد؟','درعوزي للتبريد (HMD Darouzi) شركة تبريد صناعي في حلب، سوريا. نصنّع ونجهّز غرف التبريد والتجميد، شيلرات تبريد المياه، أبراج التبريد، معامل ألواح الثلج، صناديق السيارات المبردة والعزل الحراري بألواح الساندويش بانل، ونبيع قطع التبريد بالمفرق. لدينا فرعان للمبيعات: الفرع الأول في سليمان الحلبي، طلعة العرقوب والفرع الثاني في الجميلية، والمنشأة الصناعية في المدينة الصناعية بالشيخ نجار.'],
   ['كم تكلفة غرفة التبريد؟','تعتمد التكلفة على أبعاد الغرفة ودرجة الحرارة المطلوبة وسماكة الألواح ونوع وحدة التبريد. أرسل لنا الأبعاد ونوع المنتج الذي تريد تخزينه، ونجهّز لك عرض سعر مخصصاً.'],
   ['ما درجات الحرارة التي تصل إليها غرف التبريد؟','نجهّز غرف تبريد وتجميد من +15 حتى −40 درجة مئوية، حسب المنتج وطريقة التخزين.'],
   ['ما سماكات ألواح الساندويش بانل لديكم؟','6 و10 و15 سم. يتكوّن اللوح من طبقتين من الصاج أو الألمنيوم بينهما طبقة عازلة من البولي يوريثان (الفوم) أو البولي إيثيلين أو البوليسترين، والوجه الداخلي مدهون بطبقة إيبوكسي بسماكة 5 ميكرون.'],
@@ -18,10 +18,10 @@ export const faqItems={
   ['ماذا أرسل لأحصل على عرض سعر؟','نوع المشروع أو القطعة، الأبعاد، درجة الحرارة المطلوبة، نوع المنتج الذي سيُخزَّن، ومكان التركيب. صور الموقع تساعدنا أيضاً.'],
   ['كم يستغرق تنفيذ المشروع؟','تختلف المدة حسب حجم المشروع وتجهيزاته، ونحددها معك في عرض السعر بعد دراسة المتطلبات.'],
   ['هل تقدّمون الصيانة بعد التركيب؟','نعم، نقدّم الصيانة والدعم الفني بعد التسليم. لطلب صيانة صف العطل في قسم الصيانة على موقعنا لنجهّز لك رسالة واتساب، أو اتصل بنا مباشرة.'],
-  ['أين تقع الشركة؟','مكتب المبيعات في حلب، الجميلية، بناء مديرية الأوقاف، والمنشأة الصناعية في المدينة الصناعية بالشيخ نجار. الهاتف: 0944699555، والهاتف الأرضي: 021 2250266 و021 2254755.']
+  ['أين تقع الشركة؟','لدينا فرعان للمبيعات في حلب: الفرع الأول في سليمان الحلبي، طلعة العرقوب، والفرع الثاني في الجميلية، بناء مديرية الأوقاف. والمنشأة الصناعية في المدينة الصناعية بالشيخ نجار. الهاتف: 0944699555، والهاتف الأرضي: 021 2250266 و021 2254755.']
  ],
  en:[
-  ['Who is HMD Darouzi?','HMD Darouzi (درعوزي للتبريد) is an industrial refrigeration company in Aleppo, Syria. We manufacture and supply cold and freezer rooms, water chillers, cooling towers, block ice plants, refrigerated vehicle bodies and sandwich-panel thermal insulation, and sell refrigeration parts at retail. Our sales office is in Al-Jamiliyah and our industrial facility is in Sheikh Najjar Industrial City.'],
+  ['Who is HMD Darouzi?','HMD Darouzi (درعوزي للتبريد) is an industrial refrigeration company in Aleppo, Syria. We manufacture and supply cold and freezer rooms, water chillers, cooling towers, block ice plants, refrigerated vehicle bodies and sandwich-panel thermal insulation, and sell refrigeration parts at retail. We have two sales branches, the first in Suleiman al-Halabi, Talaat al-Arqoub and the second in Al-Jamiliyah, and our industrial facility is in Sheikh Najjar Industrial City.'],
   ['How much does a cold room cost?','It depends on the room’s dimensions, the required temperature, the panel thickness and the refrigeration unit. Send us the dimensions and the product you want to store, and we will prepare a tailored quotation.'],
   ['What temperatures can your cold rooms reach?','We equip cold and freezer rooms from +15°C down to −40°C, depending on the product and how it is stored.'],
   ['What sandwich panel thicknesses do you offer?','6, 10 and 15 cm. Each panel has two skins of metal sheet or aluminium around an insulating core of polyurethane foam, polyethylene or polystyrene, and the inner face carries a 5-micron epoxy coat.'],
@@ -31,6 +31,6 @@ export const faqItems={
   ['What should I send to get a quotation?','The type of project or part, the dimensions, the required temperature, the product to be stored and the installation location. Photographs of the site help too.'],
   ['How long does a project take?','It depends on the size of the project and its equipment. We agree the timeline with you in the quotation after reviewing your requirements.'],
   ['Do you provide maintenance after installation?','Yes. We provide maintenance and technical support after handover. To request a repair, describe the fault in the maintenance section of our website to prepare a WhatsApp message, or call us directly.'],
-  ['Where is the company?','Our sales office is in Al-Jamiliyah, Awqaf Directorate building, Aleppo, and our industrial facility is in Sheikh Najjar Industrial City, Aleppo. Mobile: +963 944 699 555. Landline: 021 2250266 and 021 2254755.']
+  ['Where is the company?','We have two sales branches in Aleppo: the first branch in Suleiman al-Halabi, Talaat al-Arqoub, the second branch in Al-Jamiliyah, Awqaf Directorate building. Our industrial facility is in Sheikh Najjar Industrial City, Aleppo. Mobile: +963 944 699 555. Landline: 021 2250266 and 021 2254755.']
  ]
 };

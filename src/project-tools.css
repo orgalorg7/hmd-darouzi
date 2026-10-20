@@ -55,3 +55,84 @@
  .cooling-choices{gap:8px}.cooling-choices button{font-size:12px;padding:10px 12px;min-height:48px;gap:8px}.cooling-choices .ui-icon{width:20px;height:20px}
  #cooling-summary{font-size:12px}#cooling-links{gap:4px 10px}#cooling-links button{font-size:12px;margin:0}
 }
+/* Room configurator: typed dimensions beside each slider, the stored product, and the door list. */
+.builder-controls .dimension-field{display:inline-flex;align-items:center;gap:6px;font:600 15px Manrope,sans-serif;color:#214c87}
+.builder-controls .dimension-field input{grid-column:auto;width:4.6em;height:36px;padding:4px 8px;border:1px solid #bfd2ef;border-radius:8px;background:#fff;font:inherit;color:inherit;text-align:center}
+.builder-controls .dimension-field input:focus-visible,.builder-product input:focus-visible,#door-list select:focus-visible{outline:2px solid #174ee8;outline-offset:1px}
+.builder-controls .builder-product input{height:40px;padding:6px 12px;border:1px solid #bfd2ef;border-radius:8px;background:#fff;font:inherit;font-size:14px;color:#183f72}
+.builder-summary>.builder-doors{grid-column:1;grid-row:1/4;width:100%;display:grid;gap:8px;align-self:stretch}
+.builder-doors-head{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:13px;font-weight:600;color:#183f72}
+#builder-add-door{display:inline-flex;align-items:center;gap:6px;min-height:36px;font-size:13px}
+#builder-add-door .ui-icon,#door-list .ui-icon{width:16px;height:16px}
+#builder-add-door:disabled,#add-door:disabled{opacity:.45;cursor:not-allowed}
+#door-list{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+#door-list li{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;font-size:13px;color:#48627f}
+#door-list select{min-height:38px;padding:4px 10px;border:1px solid #bfd2ef;border-radius:8px;background:#fff;font:inherit;color:#183f72}
+.door-remove{display:grid;place-items:center;width:38px;height:38px;border:1px solid #bfd2ef;border-radius:8px;background:#fff;color:#48627f;cursor:pointer}
+.door-remove:hover:not(:disabled){border-color:#c23b3b;color:#c23b3b}.door-remove:disabled{opacity:.35;cursor:not-allowed}
+.door-hint{font-size:11px;line-height:1.6;color:#3f5a76;margin:0}
+.builder-controls>label{min-width:0}
+@media(max-width:420px){.room-builder .builder-controls{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.room-builder .builder-summary{grid-template-columns:minmax(0,1fr)}.room-builder .builder-summary>.builder-doors,.room-builder .builder-summary>.button{grid-column:1;grid-row:auto}.room-builder .builder-summary>.button{width:100%;margin-top:14px}}
+/* The in-scene configurator never runs past the hero: it is compact and scrolls inside itself on short windows. */
+@media(min-width:901px){
+ .room-builder.builder-active{top:24px;max-height:calc(100% - 48px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;gap:16px;padding:22px 24px}
+ .builder-active .builder-heading h2{font-size:24px;margin-top:4px}
+ .builder-active .builder-controls{gap:12px 22px}
+ .builder-active .builder-controls label{gap:6px}
+ .builder-active .builder-summary{padding-top:12px}
+ .builder-active .builder-summary>.button{margin-top:10px}
+ .builder-active .builder-doors{gap:6px}
+ .builder-active #door-list select,.builder-active .door-remove{min-height:34px;height:34px}
+}
+/* Temperature control sits under the hero buttons: the live reading beside a plain three-band scale in °C. */
+.lab-hero.hero .hero-content .climate-control{position:relative;inset:auto;bottom:auto;right:auto;left:auto;width:100%;max-width:440px;margin:30px 0 0;display:flex;align-items:flex-end;gap:24px;direction:ltr;pointer-events:auto;order:0}
+html[dir=rtl] .lab-hero.hero .hero-content .climate-control{margin-inline-start:auto}
+.lab-hero.hero .hero-content .climate-number{min-width:0}
+.lab-hero.hero .hero-content .climate-number output{font-size:56px}
+.lab-hero.hero .hero-content .climate-number>span{margin:6px 0 0 4px}
+.climate-control .climate-presets{flex:1;min-width:0;max-width:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:3px;padding:0;border:0;border-radius:0;background:none}
+.climate-control .climate-presets button{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;min-height:0;padding:0 2px 13px;border:0;border-radius:0;background:none;box-shadow:none;transform:none;color:#5b7491}
+.climate-control .climate-presets button::before{content:'';position:absolute;inset:auto 0 0;height:4px;background:#d3e0f2;transition:background .2s}
+.climate-control .climate-presets button:first-child::before{border-radius:2px 0 0 2px}.climate-control .climate-presets button:last-child::before{border-radius:0 2px 2px 0}
+.climate-control .climate-presets button::after{display:none}
+.climate-control .climate-presets button small{font-family:var(--font);font-size:13px;font-weight:600;color:inherit;white-space:nowrap}
+.climate-control .climate-presets button>span{font:500 13px Manrope,sans-serif;white-space:nowrap;font-variant-numeric:tabular-nums}
+.climate-control .climate-presets button:hover{background:none;transform:none;color:#183f72}
+.climate-control .climate-presets button:hover::before{background:#9db8e4}
+.climate-control .climate-presets button.active{background:none;box-shadow:none;color:#174ee8}
+.climate-control .climate-presets button.active::before{background:#174ee8}
+.climate-control .climate-presets button:focus-visible{outline:2px solid #174ee8;outline-offset:4px}
+@media(max-width:640px){.lab-hero.hero .hero-content .climate-control{max-width:none;margin-top:24px;gap:16px}.lab-hero.hero .hero-content .climate-number output{font-size:44px}.climate-control .climate-presets button small,.climate-control .climate-presets button>span{font-size:12px}}
+/* Each band carries its own cold tint; the active one is saturated and gets a slider-style knob. */
+.climate-control .climate-presets{gap:5px}
+.climate-control .climate-presets button{--band:#4da8f0;--band-soft:#d4e9fb;--band-ink:#1767b3;padding-bottom:17px;gap:3px;cursor:pointer}
+.climate-control .climate-presets [data-range=frozen]{--band:#1d5fe0;--band-soft:#cbdaf6;--band-ink:#1d5fe0}
+.climate-control .climate-presets [data-range=deep]{--band:#123a8f;--band-soft:#c3cde4;--band-ink:#123a8f}
+.climate-control .climate-presets button::before,.climate-control .climate-presets button:first-child::before,.climate-control .climate-presets button:last-child::before{height:6px;border-radius:3px;background:var(--band-soft);transition:background .25s,transform .25s}
+.climate-control .climate-presets button:hover::before{background:color-mix(in srgb,var(--band) 45%,var(--band-soft));transform:scaleY(1.25)}
+.climate-control .climate-presets button.active::before{background:var(--band)}
+.climate-control .climate-presets button.active::after{display:block;content:'';position:absolute;left:50%;bottom:-4px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#fff;border:3px solid var(--band);box-sizing:border-box;box-shadow:0 2px 6px #0d2a6b33}
+.climate-control .climate-presets button small{font-size:14px}
+.climate-control .climate-presets button.active small{color:var(--band-ink)}
+.climate-control .climate-presets button.active>span{color:#183f72;font-weight:600}
+@media(max-width:640px){.climate-control .climate-presets button small{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.climate-control .climate-presets button::before{transition:none}}
+/* Parts list switched off: the section and every way into it are hidden, while its markup and scripts stay.
+   Set data-parts-tray="on" on <html> in index.html to bring it back. */
+[data-parts-tray=off] :is(#parts-tray,.catalog-tray-link,#installation-add,#inspect-add,a[href="#parts-tray"],[data-open-tray]){display:none!important}
+[data-parts-tray=off] .mobile-dock:not([hidden]){grid-template-columns:repeat(3,minmax(0,1fr))}
+/* Six header links stay on one line down to the 901px breakpoint, in both languages. */
+.desktop-nav a{white-space:nowrap}
+@media(min-width:901px) and (max-width:1100px){.site-header .desktop-nav{gap:14px}.site-header .desktop-nav a{font-size:12px}}
+/* "Our six solutions" follows straight after "بين يديك." on the same line, and wraps under it when the line is full. */
+.lab-hero.hero .hero-title>h1{display:inline}
+.lab-hero.hero .hero-title>h1>span:first-child{display:block}
+.lab-hero.hero .hero-title>h1>.accent{display:inline-block}
+.lab-hero.hero .hero-title>.hero-solutions{display:inline-flex;vertical-align:middle;margin-inline-start:22px;pointer-events:auto;white-space:nowrap}
+@media(max-width:640px){.lab-hero.hero .hero-title>.hero-solutions{margin-inline-start:14px}}
+/* Centred on the yellow underline of "بين يديك." */
+.lab-hero.hero .hero-title>.hero-solutions{position:relative;top:20px}
+@media(max-width:1199px){.lab-hero.hero .hero-title>.hero-solutions{top:18px}}
+@media(max-width:640px){.lab-hero.hero .hero-title>.hero-solutions{top:11px}}
+html[lang=en] .lab-hero.hero .hero-title>.hero-solutions{display:flex;width:fit-content;margin:10px 0 0;top:0}

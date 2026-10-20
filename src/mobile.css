@@ -33,10 +33,10 @@
  .hero .scene-bottomline .drag-hint{display:none}
  .scene-actions{gap:8px;width:100%;justify-content:center}
  .scene-actions button{min-height:44px;font-size:12px;border-radius:9px;padding:9px 12px}
- .scene-actions #door-toggle{flex:1;max-width:160px;gap:8px}
+ .scene-actions #add-door{flex:1;max-width:160px;gap:8px}
  .scene-actions #rotate-left,.scene-actions #rotate-right,.scene-actions #reset-view{width:44px;min-width:44px;min-height:44px}
  .scene-lite .scene-actions :is(#rotate-left,#rotate-right,#reset-view){display:none}
- .scene-lite .scene-actions #door-toggle{max-width:none}
+ .scene-lite .scene-actions #add-door{max-width:none}
  .hotspot{width:44px;height:44px;box-shadow:0 0 0 4px #ffffff80}
  .hotspot .ui-icon{width:20px;height:20px}
  .hero .view-switch{position:relative;inset:auto;transform:none;order:3;margin:12px 20px 0;width:calc(100% - 40px);max-width:none;min-height:66px;gap:2px;padding:4px;background:#f9fbff;border-radius:12px;box-shadow:none}

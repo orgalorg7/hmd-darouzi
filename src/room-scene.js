@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js';
+import { clampDoor, doorWidth, separateDoor } from './doors.js';
 
 // An interactive schematic, not a production engineering drawing.
 export function createColdRoom(host, options = {}) {
@@ -50,19 +51,23 @@ export function createColdRoom(host, options = {}) {
   const roof=panel(5.2,.04,4,0,3.1,0,[0,1.5,0]);roof.visible=false;
   const roofCore=box(5.12,.11,3.92,insulation,0,-.08,0,roof);const roofInner=box(5.2,.025,4,white,0,-.16,0,roof);
   const front=new THREE.Group();room.add(front);front.visible=false;
-  box(1.1,2.8,.13,white,-2,1.62,2,front);box(2.35,2.8,.13,white,1.38,1.62,2,front);box(1.55,.35,.13,white,-.7,2.845,2,front);
-  // Hinged insulated door, visible in both exterior and cutaway views.
-  const doorPivot=new THREE.Group();doorPivot.position.set(-1.45,.22,2.07);room.add(doorPivot);
-  box(1.5,2.47,.14,blue,.75,1.235,0,doorPivot);box(.12,2.4,.16,edge,1.39,1.235,.07,doorPivot);
-  box(.045,.48,.1,silver,1.25,1.22,.16,doorPivot);box(.035,.12,.19,silver,1.25,1.44,.12,doorPivot);box(.035,.12,.19,silver,1.25,1,.12,doorPivot);
-  for(const y of [.5,1.9])box(.14,.2,.22,silver,.04,y,0,doorPivot);
-  // Recessed door face, perimeter seal, kick plate and a real manufacturer mark.
+  box(5.2,2.8,.13,white,0,1.62,2,front);
+  // Insulated doors live outside the scaled room so they keep their real size; each one slides along a wall.
   const insetBlue=makeMaterial({color:0x144994,roughness:.28,metalness:.32});
-  box(1.25,2.19,.018,insetBlue,.71,1.23,.08,doorPivot);
-  box(1.25,.22,.025,silver,.71,.23,.1,doorPivot);
-  box(1.45,.025,.018,dark,.75,2.48,0,doorPivot);
   const logoTexture=new THREE.TextureLoader().load('/assets/logo.webp',()=>wake());logoTexture.colorSpace=THREE.SRGBColorSpace;
-  const mark=new THREE.Mesh(new THREE.PlaneGeometry(.46,.23),new THREE.MeshBasicMaterial({map:logoTexture,transparent:true,depthWrite:false}));mark.position.set(.64,1.98,.101);doorPivot.add(mark);
+  const markMaterial=new THREE.MeshBasicMaterial({map:logoTexture,transparent:true,depthWrite:false}),markGeometry=new THREE.PlaneGeometry(.4,.2);
+  const doorHeight=2.2,doorsGroup=new THREE.Group();scene.add(doorsGroup);
+  // Symmetric leaf: it reads correctly from inside (cutaway) and outside (exterior) on any wall.
+  function makeDoor(){
+    const door=new THREE.Group();doorsGroup.add(door);
+    box(doorWidth,doorHeight,.2,blue,0,doorHeight/2,0,door);box(doorWidth-.2,doorHeight-.27,.21,insetBlue,0,doorHeight/2+.04,0,door);
+    box(doorWidth-.2,.2,.215,silver,0,.17,0,door);box(doorWidth+.08,.05,.22,edge,0,doorHeight+.02,0,door);
+    for(const x of [-1,1])box(.05,doorHeight,.22,edge,x*(doorWidth/2+.02),doorHeight/2,0,door);
+    box(.045,.42,.27,silver,doorWidth/2-.17,1.05,0,door);
+    for(const y of [.45,1.75])box(.1,.18,.24,silver,-doorWidth/2+.04,y,0,door);
+    for(const side of [1,-1]){const mark=new THREE.Mesh(markGeometry,markMaterial);mark.position.set(-.08,1.78,side*.108);if(side<0)mark.rotation.y=Math.PI;door.add(mark);}
+    return door;
+  }
   // Back-wall evaporator, fan housings, grilles and rotating fan rotors.
   const unit=new THREE.Group();unit.position.set(-.2,2.38,-1.62);room.add(unit);
   box(2.5,.63,.58,white,0,0,0,unit);box(2.6,.07,.68,edge,0,-.34,0,unit);
@@ -99,10 +104,12 @@ export function createColdRoom(host, options = {}) {
     }
   }
   const condenser=new THREE.Group();condenser.position.set(3.45,.65,-.4);scene.add(condenser);
-  box(1.3,1.1,1.2,white,0,0,0,condenser);box(1.4,.08,1.3,blue,0,-.6,0,condenser);
-  fan(0,.05,.62,.43,condenser);
-  for(let i=0;i<12;i++)box(.015,.9,.017,dark,.66,-.38+i*.068,.0,condenser).rotation.x=Math.PI/2;
-  box(.14,.22,.14,dark,-.48,-.7,-.45,condenser);box(.14,.22,.14,dark,.48,-.7,.45,condenser);
+  // Twin-fan condensing unit: it grows outward from the room, so its wall-side edge stays put.
+  box(2.1,1.1,1.2,white,.4,0,0,condenser);box(2.2,.08,1.3,blue,.4,-.6,0,condenser);
+  for(const x of [-.12,.92])fan(x,.05,.62,.4,condenser);
+  box(.03,.9,.02,edge,.4,.05,.62,condenser);
+  for(let i=0;i<12;i++)box(.015,.9,.017,dark,1.46,-.38+i*.068,.0,condenser).rotation.x=Math.PI/2;
+  for(const x of [-.48,1.28])for(const z of [-.45,.45])box(.14,.22,.14,dark,x,-.7,z,condenser);
   const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200),new THREE.ShadowMaterial({opacity:.13}));ground.rotation.x=-Math.PI/2;ground.position.y=-.08;ground.receiveShadow=true;scene.add(ground);
   const pad=new THREE.Mesh(new THREE.CylinderGeometry(5.4,5.4,.03,80),makeMaterial({color:0xe5ecef,roughness:1}));pad.position.set(.5,-.06,0);scene.add(pad);
   const padEdge=new THREE.Mesh(new THREE.CylinderGeometry(5.41,5.41,.07,80,1,true),edge);padEdge.position.copy(pad.position).y-=.04;scene.add(padEdge);
@@ -123,7 +130,38 @@ export function createColdRoom(host, options = {}) {
     const x=-1.1+i*.32;const curve=new THREE.CatmullRomCurve3([new THREE.Vector3(x,2.15,-1.35),new THREE.Vector3(x,1.7,-.8),new THREE.Vector3(x,.8,.5),new THREE.Vector3(x,.38,1.6)]);
     streams.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(curve.getPoints(30)),streamMat));
   }
-  const state={mode:'cutaway',temperature:-18,door:true,explode:0,doorAngle:-1.85,width:5,length:4,visible:true};
+  const state={mode:'cutaway',temperature:-18,explode:0,width:5,length:4,height:2.8,visible:true};
+  // Each door: the wall it sits on and its centre along that wall, in metres from the wall's midpoint.
+  let doors=[];const doorObjects=[];
+  const explodeOffsets={front:[0,0],back:[0,-1.3],left:[-1.2,0],right:[1.4,0]};
+  // Doors follow the animated room size and height, and travel with their wall in the exploded view.
+  function placeDoors(){
+    const sx=room.scale.x,sy=room.scale.y,sz=room.scale.z;
+    doors.forEach((d,i)=>{
+      const door=doorObjects[i],side=d.wall==='left'||d.wall==='right',[ex,ez]=explodeOffsets[d.wall];
+      door.rotation.y=side?Math.PI/2:0;door.scale.z=Math.max(1,(.13*(side?sx:sz)+.04)/.2);
+      const x=side?(d.wall==='left'?-2.55:2.55)*sx:d.offset,z=side?d.offset:(d.wall==='back'?-2:2)*sz;
+      door.position.set(x+ex*sx*state.explode,.22*sy,z+ez*sz*state.explode);
+    });
+  }
+  // Dragging a door moves it to the wall nearest the pointer and slides it along that wall.
+  const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2(),dragPlane=new THREE.Plane(new THREE.Vector3(0,1,0),-1.1),dragPoint=new THREE.Vector3();
+  let dragging=null;
+  function aim(event){const rect=renderer.domElement.getBoundingClientRect();pointer.set((event.clientX-rect.left)/rect.width*2-1,-(event.clientY-rect.top)/rect.height*2+1);raycaster.setFromCamera(pointer,camera);}
+  function pick(event){aim(event);const found=raycaster.intersectObjects(doorObjects,true)[0];if(!found)return -1;let object=found.object;while(object.parent!==doorsGroup)object=object.parent;return doorObjects.indexOf(object);}
+  function moveDoor(index,event){
+    aim(event);if(!raycaster.ray.intersectPlane(dragPlane,dragPoint))return;
+    const hx=2.55*room.scale.x,hz=2*room.scale.z,gaps={front:Math.abs(dragPoint.z-hz),back:Math.abs(dragPoint.z+hz),left:Math.abs(dragPoint.x+hx),right:Math.abs(dragPoint.x-hx)};
+    const wall=Object.keys(gaps).reduce((a,b)=>gaps[a]<=gaps[b]?a:b);
+    doors[index]=clampDoor({wall,offset:wall==='left'||wall==='right'?dragPoint.z:dragPoint.x},state.width,state.length);doors[index]=separateDoor(doors,index,state.width,state.length);
+    placeDoors();renderer.shadowMap.needsUpdate=true;wake();
+  }
+  const onDoorDown=event=>{if(event.button>0)return;const index=pick(event);if(index<0)return;dragging={index,id:event.pointerId};controls.enabled=false;renderer.domElement.setPointerCapture(event.pointerId);renderer.domElement.style.cursor='grabbing';event.preventDefault();};
+  const onDoorMove=event=>{if(dragging){if(event.pointerId===dragging.id)moveDoor(dragging.index,event);}else if(event.pointerType==='mouse')renderer.domElement.style.cursor=pick(event)>=0?'grab':'';};
+  const onDoorUp=event=>{if(!dragging||event.pointerId!==dragging.id)return;dragging=null;controls.enabled=true;renderer.domElement.style.cursor='';options.onDoorsChange?.(doors.map(d=>({...d})));};
+  // Capture phase: runs before OrbitControls, so grabbing a door never also rotates the room.
+  renderer.domElement.addEventListener('pointerdown',onDoorDown,{capture:true});renderer.domElement.addEventListener('pointermove',onDoorMove);
+  renderer.domElement.addEventListener('pointerup',onDoorUp);renderer.domElement.addEventListener('pointercancel',onDoorUp);
   // Panels sharing an explosion direction are one assembly, not 18 animated draw calls.
   const wallAssemblies=new Map();
   for(const part of moving){const key=part.offset.toArray().join(',');const list=wallAssemblies.get(key)||[];list.push(part);wallAssemblies.set(key,list);}
@@ -134,7 +172,7 @@ export function createColdRoom(host, options = {}) {
     moving.push({object:assembly,base:new THREE.Vector3(),offset:parts[0].offset});
   }
   // Batch stationary geometry by parent and material. Moving assemblies remain independent.
-  const unbatched=new Set([roofCore,roofInner,mark]);
+  const unbatched=new Set([roofCore,roofInner]);
   function batch(group){
     for(const child of [...group.children])if(child.isGroup)batch(child);
     const buckets=new Map();
@@ -142,7 +180,7 @@ export function createColdRoom(host, options = {}) {
     for(const meshes of buckets.values()){if(meshes.length<2)continue;const geometries=meshes.map(mesh=>{mesh.updateMatrix();return mesh.geometry.clone().applyMatrix4(mesh.matrix);});const geometry=mergeGeometries(geometries);geometries.forEach(g=>g.dispose());if(!geometry)continue;const merged=new THREE.Mesh(geometry,meshes[0].material);merged.castShadow=true;merged.receiveShadow=true;group.add(merged);for(const mesh of meshes){group.remove(mesh);mesh.geometry.dispose();}}
   }
   batch(room);batch(condenser);
-  const hotspots=[{key:'cooling',anchor:unit,point:new THREE.Vector3(0,.42,.32)},{key:'panels',anchor:insulationAnchor,point:new THREE.Vector3(.1,.08,0)},{key:'door',anchor:doorPivot,point:new THREE.Vector3(.75,1.4,.16)}];
+  const hotspots=[{key:'cooling',anchor:unit,point:new THREE.Vector3(0,.42,.32)},{key:'panels',anchor:insulationAnchor,point:new THREE.Vector3(.1,.08,0)},{key:'door',anchor:null,point:new THREE.Vector3(0,1.4,.12)}];
   let frame=0,last=0,disposed=false,rendering=false,idleUntil=0,settleInitial=true,viewWidth=0,viewHeight=0,slowFrames=0;
   const projectedPoint=new THREE.Vector3();
   for(const hotspot of hotspots)hotspot.element=host.parentElement.querySelector(`[data-hotspot="${hotspot.key}"]`);
@@ -163,16 +201,17 @@ export function createColdRoom(host, options = {}) {
     const elapsed=now-last;const dt=Math.min(elapsed/1000||.016,.05);last=now;rendering=true;
     if(!lowPower&&elapsed>42&&elapsed<250){slowFrames++;if(slowFrames>=12){lowPower=true;frameInterval=32;renderer.shadowMap.enabled=false;particles.visible=false;streams.visible=false;resize();}}else slowFrames=Math.max(0,slowFrames-1);
     const speed=(reduced.matches||settleInitial)?1:Math.min(dt*6,1);
-    const target=state.mode==='exploded'?1:0;if(Math.abs((state.mode==='exterior'?2.5:1)-rightWall.scale.y)>.001||Math.abs(target-state.explode)>.001||Math.abs((state.door?-1.85:0)-state.doorAngle)>.001||Math.abs(state.width/5-room.scale.x)>.001||Math.abs(state.length/4-room.scale.z)>.001)renderer.shadowMap.needsUpdate=true;state.explode+=(target-state.explode)*speed;
+    const target=state.mode==='exploded'?1:0;if(Math.abs((state.mode==='exterior'?2.5:1)-rightWall.scale.y)>.001||Math.abs(target-state.explode)>.001||Math.abs(state.height/2.8-room.scale.y)>.001||Math.abs(state.width/5-room.scale.x)>.001||Math.abs(state.length/4-room.scale.z)>.001)renderer.shadowMap.needsUpdate=true;state.explode+=(target-state.explode)*speed;
     for(const m of moving)m.object.position.copy(m.base).addScaledVector(m.offset,state.explode);
     roof.visible=state.mode==='exterior'||state.explode>.02;front.visible=state.mode==='exterior';roofCore.position.y=-.08-state.explode*.25;roofInner.position.y=-.16-state.explode*.5;
     rightWall.scale.y+=((state.mode==='exterior'?2.5:1)-rightWall.scale.y)*speed;rightWall.position.y=.79+(rightWall.scale.y-1)*.55;condenser.position.x=3.45*room.scale.x;
-    state.doorAngle+=((state.door?-1.85:0)-state.doorAngle)*speed;doorPivot.rotation.y=state.doorAngle;
-    room.scale.x+=(state.width/5-room.scale.x)*speed;room.scale.z+=(state.length/4-room.scale.z)*speed;
+    room.scale.x+=(state.width/5-room.scale.x)*speed;room.scale.z+=(state.length/4-room.scale.z)*speed;room.scale.y+=(state.height/2.8-room.scale.y)*speed;
+    // Height stretches the walls only: the evaporator and crates keep their size, and the crates stay on the floor.
+    unit.scale.y=contents.scale.y=1/room.scale.y;contents.position.y=.22*(room.scale.y-1)/room.scale.y;placeDoors();
     if(!reduced.matches&&!lowPower){fans.forEach(f=>f.rotation.z-=dt*(state.temperature<0?5:2));const p=particleGeo.attributes.position;for(let i=0;i<particleCount;i++){p.array[i*3+1]-=dt*(.1+seeds[i]*.15);p.array[i*3+2]+=dt*.1;if(p.array[i*3+1]<.25){p.array[i*3+1]=2.8;p.array[i*3+2]=-1.4;}}p.needsUpdate=true;}
-    const targetZoom=(state.mode==='exploded'?.9:1)/Math.max(1,(state.width/5+state.length/4)/2);if(Math.abs(targetZoom-camera.zoom)>.0001){camera.zoom+=(targetZoom-camera.zoom)*speed;camera.updateProjectionMatrix();}controls.update();renderer.render(scene,camera);
+    const targetZoom=(state.mode==='exploded'?.9:1)/Math.max(1,(state.width/5+state.length/4)/2,state.height/2.8);if(Math.abs(targetZoom-camera.zoom)>.0001){camera.zoom+=(targetZoom-camera.zoom)*speed;camera.updateProjectionMatrix();}controls.update();renderer.render(scene,camera);
     for(const hotspot of hotspots){
-      if(!hotspot.element)continue;
+      if(!hotspot.element||!hotspot.anchor)continue;
       hotspot.anchor.localToWorld(projectedPoint.copy(hotspot.point)).project(camera);
       const x=Math.round((projectedPoint.x*.5+.5)*viewWidth),y=Math.round((-projectedPoint.y*.5+.5)*viewHeight);
       if(x!==hotspot.x){hotspot.element.style.left=`${x}px`;hotspot.x=x;}
@@ -193,13 +232,17 @@ export function createColdRoom(host, options = {}) {
     finishSetup(){idleUntil=0;settleInitial=true;},
     setMode(mode){state.mode=mode;host.dataset.mode=mode;renderer.shadowMap.needsUpdate=true;wake();},
     setTemperature,
-    setDimensions(width,length){state.width=width;state.length=length;wake();},
-    setDoor(open){state.door=open;wake();},
+    setDimensions(width,length,height=state.height){state.width=width;state.length=length;state.height=height;wake();},
+    setDoors(list){
+      while(doorObjects.length<list.length)doorObjects.push(makeDoor());
+      while(doorObjects.length>list.length){const door=doorObjects.pop();doorsGroup.remove(door);door.traverse(object=>{if(object.isMesh&&object.geometry!==markGeometry)object.geometry.dispose();});}
+      doors=list.map(d=>clampDoor(d,state.width,state.length));hotspots[2].anchor=doorObjects[0]||null;placeDoors();renderer.shadowMap.needsUpdate=true;wake();
+    },
     rotate(direction){controls.rotateLeft(direction*.25);controls.update();wake();},
     reset(){controls.enableDamping=false;controls.update();camera.position.set(9,7.4,11.5);controls.target.set(.45,1.2,0);controls.update();controls.enableDamping=true;wake();},
     dispose(){
       disposed=true;stopFrame();ro.disconnect();io.disconnect();controls.dispose();
-      renderer.domElement.removeEventListener('webglcontextlost',contextLost);document.removeEventListener('visibilitychange',resume);
+      renderer.domElement.removeEventListener('webglcontextlost',contextLost);for(const [type,handler] of [['pointermove',onDoorMove],['pointerup',onDoorUp],['pointercancel',onDoorUp]])renderer.domElement.removeEventListener(type,handler);renderer.domElement.removeEventListener('pointerdown',onDoorDown,{capture:true});document.removeEventListener('visibilitychange',resume);
       const geometries=new Set(),materials=new Set();scene.traverse(object=>{if(object.geometry)geometries.add(object.geometry);if(object.material)for(const material of Array.isArray(object.material)?object.material:[object.material])materials.add(material);});
       geometries.forEach(geometry=>geometry.dispose());materials.forEach(material=>material.dispose());logoTexture.dispose();brushTexture.dispose();contactTexture.dispose();
       renderer.dispose();renderer.forceContextLoss();renderer.domElement.remove();
